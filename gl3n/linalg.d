@@ -727,14 +727,14 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         assert(m2[1][0] == 2.0f);
         assert(m2[1][1] == 3.0f);
         m2[0..1] = [2.0f, 2.0f];
-        assert(m2 == [[2.0f, 2.0f], [2.0f, 3.0f]]);
+        assert(cast(float[2][2])m2.matrix == [[2.0f, 2.0f], [2.0f, 3.0f]]);
         
         shared mat3 m3 = shared mat3(0.0f, 0.1f, 0.2f, 1.0f, 1.1f, 1.2f, 2.0f, 2.1f, 2.2f);
         assert(m3[0][1] == 0.1f);
         assert(m3[2][0] == 2.0f);
         assert(m3[1][2] == 1.2f);
         m3[0][0..$] = 0.0f;
-        assert(m3 == [[0.0f, 0.0f, 0.0f],
+        assert(cast(float[3][3])m3.matrix == [[0.0f, 0.0f, 0.0f],
                       [1.0f, 1.1f, 1.2f],
                       [2.0f, 2.1f, 2.2f]]);
         
@@ -742,12 +742,12 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
                        1.0f, 1.1f, 1.2f, 1.3f,
                        2.0f, 2.1f, 2.2f, 2.3f,
                        3.0f, 3.1f, 3.2f, 3.3f);
-       assert(m4[0][3] == 0.3f);
-       assert(m4[1][1] == 1.1f);
-       assert(m4[2][0] == 2.0f);
-       assert(m4[3][2] == 3.2f);
-       m4[2][1..3] = [1.0f, 2.0f];
-       assert(m4 == [[0.0f, 0.1f, 0.2f, 0.3f],
+        assert(m4[0][3] == 0.3f);
+        assert(m4[1][1] == 1.1f);
+        assert(m4[2][0] == 2.0f);
+        assert(m4[3][2] == 3.2f);
+        m4[2][1..3] = [1.0f, 2.0f];
+        assert(cast(float[4][4])m4.matrix == [[0.0f, 0.1f, 0.2f, 0.3f],
                      [1.0f, 1.1f, 1.2f, 1.3f],
                      [2.0f, 1.0f, 2.0f, 2.3f],
                      [3.0f, 3.1f, 3.2f, 3.3f]]);
@@ -930,8 +930,8 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         shared Matrix!(float, 2, 3) mt1 = shared Matrix!(float, 2, 3)(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f);
         shared Matrix!(float, 3, 2) mt2 = shared Matrix!(float, 3, 2)(6.0f, -1.0f, 3.0f, 2.0f, 0.0f, -3.0f);
         
-        assert(cast(float[2][3])mt1.matrix == [[1.0f, 2.0f, 3.0f], [4.0f, 5.0f, 6.0f]]);
-        assert(cast(float[3][2])mt2.matrix == [[6.0f, -1.0f], [3.0f, 2.0f], [0.0f, -3.0f]]);
+        assert(cast(float[3][2])mt1.matrix == [[1.0f, 2.0f, 3.0f], [4.0f, 5.0f, 6.0f]]);
+        assert(cast(float[2][3])mt2.matrix == [[6.0f, -1.0f], [3.0f, 2.0f], [0.0f, -3.0f]]);
 
         static assert(!__traits(compiles, shared mat2(1, 2, 1)));
         static assert(!__traits(compiles, shared mat3(1, 2, 3, 1, 2, 3, 1, 2)));
@@ -1294,7 +1294,7 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
                 assert((cp[2] < -0.577349f) && (cp[2] > -0.577351f));
                 
                 assert(mat4.perspective(600f, 900f, 60.0, 1.0, 100.0) == mat4.perspective(cp[0], cp[1], cp[2], cp[3], cp[4], cp[5]));
-                float[4][4] m4p = mat4.perspective(600f, 900f, 60.0, 1.0, 100.0).matrix;
+                float[4][4] m4p = cast(float[4][4])mat4.perspective(600f, 900f, 60.0, 1.0, 100.0).matrix;
                 assert((m4p[0][0] < 2.598077f) && (m4p[0][0] > 2.598075f));
                 assert(m4p[0][2] == 0.0f);
                 assert((m4p[1][1] < 1.732052) && (m4p[1][1] > 1.732050));
@@ -1303,7 +1303,7 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
                 assert((m4p[2][3] < -2.020201) && (m4p[2][3] > -2.020203));
                 assert((m4p[3][2] < -0.9f) && (m4p[3][2] > -1.1f));
                 
-                float[4][4] m4pi = mat4.perspective_inverse(600f, 900f, 60.0, 1.0, 100.0).matrix;
+                float[4][4] m4pi = cast(float[4][4])mat4.perspective_inverse(600f, 900f, 60.0, 1.0, 100.0).matrix;
                 assert((m4pi[0][0] < 0.384901) && (m4pi[0][0] > 0.384899));
                 assert(m4pi[0][3] == 0.0f);
                 assert((m4pi[1][1] < 0.577351) && (m4pi[1][1] > 0.577349));
@@ -1313,13 +1313,13 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
                 assert((m4pi[3][3] < 0.505001) && (m4pi[3][3] > 0.504999));
 
                 // maybe the next tests should be improved
-                float[4][4] m4o = mat4.orthographic(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f).matrix;
+                float[4][4] m4o = cast(float[4][4])mat4.orthographic(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f).matrix;
                 assert(m4o == [[1.0f, 0.0f, 0.0f, 0.0f],
                                [0.0f, 1.0f, 0.0f, 0.0f],
                                [0.0f, 0.0f, -1.0f, 0.0f],
                                [0.0f, 0.0f, 0.0f, 1.0f]]);
                
-                float[4][4] m4oi = mat4.orthographic_inverse(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f).matrix;
+                float[4][4] m4oi = cast(float[4][4])mat4.orthographic_inverse(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f).matrix;
                 assert(m4oi == [[1.0f, 0.0f, 0.0f, 0.0f],
                                 [0.0f, 1.0f, 0.0f, 0.0f],
                                 [0.0f, 0.0f, -1.0f, 0.0f],
@@ -2310,16 +2310,16 @@ shared struct Quaternion(type) {
     }
     
     unittest {
-        assert(cast(float[4])quat.xrotation(PI).quaternion[1..4] == [1.0f, 0.0f, 0.0f]);
-        assert(cast(float[4])quat.yrotation(PI).quaternion[1..4] == [0.0f, 1.0f, 0.0f]);
-        assert(cast(float[4])quat.zrotation(PI).quaternion[1..4] == [0.0f, 0.0f, 1.0f]);
+        assert(cast(float[3])quat.xrotation(PI).quaternion[1..4] == [1.0f, 0.0f, 0.0f]);
+        assert(cast(float[3])quat.yrotation(PI).quaternion[1..4] == [0.0f, 1.0f, 0.0f]);
+        assert(cast(float[3])quat.zrotation(PI).quaternion[1..4] == [0.0f, 0.0f, 1.0f]);
         assert((quat.xrotation(PI).w == quat.yrotation(PI).w) && (quat.yrotation(PI).w == quat.zrotation(PI).w));
         //assert(quat.rotatex(PI).w == to!(quat.qt)(cos(PI)));
         assert(quat.xrotation(PI).quaternion == quat.identity.rotatex(PI).quaternion);
         assert(quat.yrotation(PI).quaternion == quat.identity.rotatey(PI).quaternion);
         assert(quat.zrotation(PI).quaternion == quat.identity.rotatez(PI).quaternion);
         
-        assert(cast(float[4])quat.axis_rotation(PI, vec3(1.0f, 1.0f, 1.0f)).quaternion[1..4] == [1.0f, 1.0f, 1.0f]);
+        assert(cast(float[3])quat.axis_rotation(PI, vec3(1.0f, 1.0f, 1.0f)).quaternion[1..4] == [1.0f, 1.0f, 1.0f]);
         assert(quat.axis_rotation(PI, vec3(1.0f, 1.0f, 1.0f)).w == quat.xrotation(PI).w);
         assert(quat.axis_rotation(PI, vec3(1.0f, 1.0f, 1.0f)).quaternion ==
                quat.identity.rotate_axis(PI, vec3(1.0f, 1.0f, 1.0f)).quaternion);

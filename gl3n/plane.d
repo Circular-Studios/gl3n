@@ -65,7 +65,7 @@ shared struct PlaneT(type = float) if(isFloatingPoint!type) {
     }
 
     /// Returns a normalized copy of the plane.
-    @property shared PlaneT normalized() const {
+    @property shared shared(PlaneT) normalized() const {
         shared PlaneT ret = shared PlaneT(a, b, c, d);
         ret.normalize();
         return ret;
@@ -74,8 +74,8 @@ shared struct PlaneT(type = float) if(isFloatingPoint!type) {
     unittest {
         shared Plane p = shared Plane(0.0f, 1.0f, 2.0f, 3.0f);
         shared Plane pn = p.normalized();
-        assert(pn.normal == vec3(0.0f, 1.0f, 2.0f).normalized);
-        assert(almost_equal(pn.d, 3.0f/vec3(0.0f, 1.0f, 2.0f).length));
+        assert(pn.normal == (shared vec3(0.0f, 1.0f, 2.0f)).normalized);
+        assert(almost_equal(pn.d, 3.0f/(shared vec3(0.0f, 1.0f, 2.0f)).length));
         p.normalize();
         assert(p == pn);
     }
@@ -94,9 +94,9 @@ shared struct PlaneT(type = float) if(isFloatingPoint!type) {
 
     unittest {
         shared Plane p = shared Plane(-1.0f, 4.0f, 19.0f, -10.0f);
-        assert(almost_equal(p.ndistance(vec3(5.0f, -2.0f, 0.0f)), -1.182992));
-        assert(almost_equal(p.ndistance(vec3(5.0f, -2.0f, 0.0f)),
-                            p.normalized.distance(vec3(5.0f, -2.0f, 0.0f))));
+        assert(almost_equal(p.ndistance(shared vec3(5.0f, -2.0f, 0.0f)), -1.182992));
+        assert(almost_equal(p.ndistance(shared vec3(5.0f, -2.0f, 0.0f)),
+                            p.normalized.distance(shared vec3(5.0f, -2.0f, 0.0f))));
     }
 
     bool opEquals(shared PlaneT other) const {

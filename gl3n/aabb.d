@@ -151,7 +151,7 @@ shared struct AABBT(type) {
     }
 
     /// Returns the center of the AABB.
-    @property vec3 center() const {
+    @property shared(vec3) center() const {
         return 0.5 * shared vec3(max + min);
     }
 

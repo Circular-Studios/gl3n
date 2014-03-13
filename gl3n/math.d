@@ -91,11 +91,11 @@ unittest {
     assert(abs(-1.0) == 1.0);
     assert(abs(1.0) == 1.0);
     
-    assert(abs(vec3i(-1, 0, -12)) == vec3(1, 0, 12));
-    assert(abs(vec3(-1, 0, -12)) == vec3(1, 0, 12));
-    assert(abs(vec3i(12, 12, 12)) == vec3(12, 12, 12));
+    assert(abs(shared vec3i(-1, 0, -12)) == shared vec3(1, 0, 12));
+    assert(abs(shared vec3(-1, 0, -12)) == shared vec3(1, 0, 12));
+    assert(abs(shared vec3i(12, 12, 12)) == shared vec3(12, 12, 12));
 
-    assert(abs(quat(-1.0f, 0.0f, 1.0f, -12.0f)) == quat(1.0f, 0.0f, 1.0f, 12.0f));
+    assert(abs(shared quat(-1.0f, 0.0f, 1.0f, -12.0f)) == shared quat(1.0f, 0.0f, 1.0f, 12.0f));
 }
 
 /// Returns 1/sqrt(x), results are undefined if x <= 0.
