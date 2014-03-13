@@ -655,7 +655,7 @@ shared struct Vector(type, int dimension_) {
 }
 
 /// Calculates the cross product of two 3-dimensional vectors.
-@safe pure nothrow T cross(T)(const shared T veca, const shared T vecb) if(is_vector!T && (T.dimension == 3)) {
+@safe pure nothrow shared(T) cross(T)(const shared T veca, const shared T vecb) if(is_vector!T && (T.dimension == 3)) {
    return T(veca.y * vecb.z - vecb.y * veca.z,
             veca.z * vecb.x - vecb.z * veca.x,
             veca.x * vecb.y - vecb.x * veca.y);
