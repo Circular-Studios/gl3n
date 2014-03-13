@@ -206,7 +206,7 @@ shared struct Vector(type, int dimension_) {
         assert(!vec_clear.isFinite);
         vec_clear.clear(1.0f);
         assert(vec_clear.isFinite);
-        assert(vec_clear.vector == [1.0f, 1.0f, 1.0f]);
+        assert(cast(float[3])vec_clear.vector == [1.0f, 1.0f, 1.0f]);
         assert(vec_clear.vector == (shared vec3(1.0f)).vector);
         vec_clear.clear(float.infinity);
         assert(!vec_clear.isFinite);
@@ -217,35 +217,35 @@ shared struct Vector(type, int dimension_) {
         
         shared vec4 b = shared vec4(1.0f, vec_clear);
         assert(b.isFinite);
-        assert(b.vector == [1.0f, 1.0f, 1.0f, 1.0f]);
+        assert(cast(float[4])b.vector == [1.0f, 1.0f, 1.0f, 1.0f]);
         assert(b.vector == (shared vec4(1.0f)).vector);
 
         shared vec2 v2_1 = shared vec2(shared vec2(0.0f, 1.0f));
-        assert(v2_1.vector == [0.0f, 1.0f]);
+        assert(cast(float[2])v2_1.vector == [0.0f, 1.0f]);
         
         shared vec2 v2_2 = shared vec2(1.0f, 1.0f);
-        assert(v2_2.vector == [1.0f, 1.0f]);
+        assert(cast(float[2])v2_2.vector == [1.0f, 1.0f]);
         
         shared vec3 v3 = shared vec3(v2_1, 2.0f);
-        assert(v3.vector == [0.0f, 1.0f, 2.0f]);
+        assert(cast(float[3])v3.vector == [0.0f, 1.0f, 2.0f]);
         
         shared vec4 v4_1 = shared vec4(1.0f, shared vec2(2.0f, 3.0f), 4.0f);
-        assert(v4_1.vector == [1.0f, 2.0f, 3.0f, 4.0f]);
-        assert((shared vec3(v4_1)).vector == [1.0f, 2.0f, 3.0f]);
-        assert((shared vec2(shared vec3(v4_1))).vector == [1.0f, 2.0f]);
+        assert(cast(float[4])v4_1.vector == [1.0f, 2.0f, 3.0f, 4.0f]);
+        assert(cast(float[3])(shared vec3(v4_1)).vector == [1.0f, 2.0f, 3.0f]);
+        assert(cast(float[2])(shared vec2(shared vec3(v4_1))).vector == [1.0f, 2.0f]);
         assert((shared vec2(shared vec3(v4_1))).vector == (shared vec2(v4_1)).vector);
         assert(v4_1.vector == (shared vec4([1.0f, 2.0f, 3.0f, 4.0f])).vector);
         
         shared vec4 v4_2 = shared vec4(shared vec2(1.0f, 2.0f), shared vec2(3.0f, 4.0f));
-        assert(v4_2.vector == [1.0f, 2.0f, 3.0f, 4.0f]);
-        assert((shared vec3(v4_2)).vector == [1.0f, 2.0f, 3.0f]);
-        assert((shared vec2(shared vec3(v4_2))).vector == [1.0f, 2.0f]);
+        assert(cast(float[4])v4_2.vector == [1.0f, 2.0f, 3.0f, 4.0f]);
+        assert(cast(float[3])(shared vec3(v4_2)).vector == [1.0f, 2.0f, 3.0f]);
+        assert(cast(float[2])(shared vec2(shared vec3(v4_2))).vector == [1.0f, 2.0f]);
         assert((shared vec2(shared vec3(v4_2))).vector == (shared vec2(v4_2)).vector);
         assert(v4_2.vector == (shared vec4([1.0f, 2.0f, 3.0f, 4.0f])).vector);
         
-        float[2] f2 = [1.0f, 2.0f];
-        float[3] f3 = [1.0f, 2.0f, 3.0f];
-        float[4] f4 = [1.0f, 2.0f, 3.0f, 4.0f];
+        shared float[2] f2 = [1.0f, 2.0f];
+        shared float[3] f3 = [1.0f, 2.0f, 3.0f];
+        shared float[4] f4 = [1.0f, 2.0f, 3.0f, 4.0f];
         assert((shared vec2(1.0f, 2.0f)).vector == (shared vec2(f2)).vector);
         assert((shared vec3(1.0f, 2.0f, 3.0f)).vector == (shared vec3(f3)).vector);
         assert((shared vec3(1.0f, 2.0f, 3.0f)).vector == (shared vec3(f2, 3.0f)).vector);
@@ -258,9 +258,9 @@ shared struct Vector(type, int dimension_) {
         assert(shared vec3d(shared vec3(1.0, 2.0, 3.0)) == shared vec3d(1.0, 2.0, 3.0));
 
         static assert(!__traits(compiles, shared vec3(0.0f, 0.0f)));
-        static assert(!__traits(compiles, shared vec3(0.0f, 0.0f, 0.0f)));
-        static assert(!__traits(compiles, shared vec3(0.0f, shared vec2(0.0f, 0.0f))));
-        static assert(!__traits(compiles, shared vec3(shared vec3(0.0f, 0.0f, 0.0f))));
+        static assert(!__traits(compiles, shared vec4(0.0f, 0.0f, 0.0f)));
+        static assert(!__traits(compiles, shared vec4(0.0f, shared vec2(0.0f, 0.0f))));
+        static assert(!__traits(compiles, shared vec4(shared vec3(0.0f, 0.0f, 0.0f))));
     }
 
     template coord_to_index(char c) {   
@@ -289,50 +289,50 @@ shared struct Vector(type, int dimension_) {
     }
 
     unittest {
-        vec2 v2 = vec2(1.0f, 2.0f);
+        shared vec2 v2 = shared vec2(1.0f, 2.0f);
         assert(v2.x == 1.0f);
         assert(v2.y == 2.0f);
         v2.x = 3.0f;
         v2.x += 1;
         v2.x -= 1;
-        assert(v2.vector == [3.0f, 2.0f]);
+        assert(cast(float[2])v2.vector == [3.0f, 2.0f]);
         v2.y = 4.0f;
         v2.y += 1;
         v2.y -= 1;
-        assert(v2.vector == [3.0f, 4.0f]);
+        assert(cast(float[2])v2.vector == [3.0f, 4.0f]);
         assert((v2.x == 3.0f) && (v2.x == v2.u) && (v2.x == v2.s) && (v2.x == v2.r));
         assert(v2.y == 4.0f);
         assert((v2.y == 4.0f) && (v2.y == v2.v) && (v2.y == v2.t) && (v2.y == v2.g));
         v2.set(0.0f, 1.0f);
-        assert(v2.vector == [0.0f, 1.0f]);
-        v2.update(vec2(3.0f, 4.0f));
-        assert(v2.vector == [3.0f, 4.0f]);
+        assert(cast(float[2])v2.vector == [0.0f, 1.0f]);
+        v2.update(shared vec2(3.0f, 4.0f));
+        assert(cast(float[2])v2.vector == [3.0f, 4.0f]);
         
-        vec3 v3 = vec3(1.0f, 2.0f, 3.0f);
+        shared vec3 v3 = shared vec3(1.0f, 2.0f, 3.0f);
         assert(v3.x == 1.0f);
         assert(v3.y == 2.0f);
         assert(v3.z == 3.0f);
         v3.x = 3.0f;
         v3.x += 1;
         v3.x -= 1;
-        assert(v3.vector == [3.0f, 2.0f, 3.0f]);
+        assert(cast(float[3])v3.vector == [3.0f, 2.0f, 3.0f]);
         v3.y = 4.0f;
         v3.y += 1;
         v3.y -= 1;
-        assert(v3.vector == [3.0f, 4.0f, 3.0f]);
+        assert(cast(float[3])v3.vector == [3.0f, 4.0f, 3.0f]);
         v3.z = 5.0f;
         v3.z += 1;
         v3.z -= 1;
-        assert(v3.vector == [3.0f, 4.0f, 5.0f]);
+        assert(cast(float[3])v3.vector == [3.0f, 4.0f, 5.0f]);
         assert((v3.x == 3.0f) && (v3.x == v3.s) && (v3.x == v3.r));
         assert((v3.y == 4.0f) && (v3.y == v3.t) && (v3.y == v3.g));
         assert((v3.z == 5.0f) && (v3.z == v3.p) && (v3.z == v3.b));
         v3.set(0.0f, 1.0f, 2.0f);
-        assert(v3.vector == [0.0f, 1.0f, 2.0f]);
-        v3.update(vec3(3.0f, 4.0f, 5.0f));
-        assert(v3.vector == [3.0f, 4.0f, 5.0f]);
+        assert(cast(float[3])v3.vector == [0.0f, 1.0f, 2.0f]);
+        v3.update(shared vec3(3.0f, 4.0f, 5.0f));
+        assert(cast(float[3])v3.vector == [3.0f, 4.0f, 5.0f]);
                 
-        vec4 v4 = vec4(1.0f, 2.0f, vec2(3.0f, 4.0f));
+        shared vec4 v4 = shared vec4(1.0f, 2.0f, shared vec2(3.0f, 4.0f));
         assert(v4.x == 1.0f);
         assert(v4.y == 2.0f);
         assert(v4.z == 3.0f);
@@ -340,27 +340,27 @@ shared struct Vector(type, int dimension_) {
         v4.x = 3.0f;
         v4.x += 1;
         v4.x -= 1;
-        assert(v4.vector == [3.0f, 2.0f, 3.0f, 4.0f]);
+        assert(cast(float[4])v4.vector == [3.0f, 2.0f, 3.0f, 4.0f]);
         v4.y = 4.0f;
         v4.y += 1;
         v4.y -= 1;
-        assert(v4.vector == [3.0f, 4.0f, 3.0f, 4.0f]);
+        assert(cast(float[4])v4.vector == [3.0f, 4.0f, 3.0f, 4.0f]);
         v4.z = 5.0f;
         v4.z += 1;
         v4.z -= 1;
-        assert(v4.vector == [3.0f, 4.0f, 5.0f, 4.0f]);
+        assert(cast(float[4])v4.vector == [3.0f, 4.0f, 5.0f, 4.0f]);
         v4.w = 6.0f;
         v4.w += 1;
         v4.w -= 1;
-        assert(v4.vector == [3.0f, 4.0f, 5.0f, 6.0f]);
+        assert(cast(float[4])v4.vector == [3.0f, 4.0f, 5.0f, 6.0f]);
         assert((v4.x == 3.0f) && (v4.x == v4.s) && (v4.x == v4.r));
         assert((v4.y == 4.0f) && (v4.y == v4.t) && (v4.y == v4.g));
         assert((v4.z == 5.0f) && (v4.z == v4.p) && (v4.z == v4.b));
         assert((v4.w == 6.0f) && (v4.w == v4.q) && (v4.w == v4.a));
         v4.set(0.0f, 1.0f, 2.0f, 3.0f);
-        assert(v4.vector == [0.0f, 1.0f, 2.0f, 3.0f]);
-        v4.update(vec4(3.0f, 4.0f, 5.0f, 6.0f));
-        assert(v4.vector == [3.0f, 4.0f, 5.0f, 6.0f]);
+        assert(cast(float[4])v4.vector == [0.0f, 1.0f, 2.0f, 3.0f]);
+        v4.update(shared vec4(3.0f, 4.0f, 5.0f, 6.0f));
+        assert(cast(float[4])v4.vector == [3.0f, 4.0f, 5.0f, 6.0f]);
     }
 
     private void dispatchImpl(int i, string s, int size)(ref vt[size] result) const {
@@ -381,15 +381,15 @@ shared struct Vector(type, int dimension_) {
     }
 
     unittest {
-        vec2 v2 = vec2(1.0f, 2.0f);
+        shared vec2 v2 = shared vec2(1.0f, 2.0f);
         assert(v2.xytsy == [1.0f, 2.0f, 2.0f, 1.0f, 2.0f]);
 
-        assert(vec3(1.0f, 2.0f, 3.0f).xybzyr == [1.0f, 2.0f, 3.0f, 3.0f, 2.0f, 1.0f]);
-        assert(vec4(v2, 3.0f, 4.0f).xyzwrgbastpq == [1.0f, 2.0f, 3.0f, 4.0f,
+        assert((shared vec3(1.0f, 2.0f, 3.0f)).xybzyr == [1.0f, 2.0f, 3.0f, 3.0f, 2.0f, 1.0f]);
+        assert((shared vec4(v2, 3.0f, 4.0f)).xyzwrgbastpq == [1.0f, 2.0f, 3.0f, 4.0f,
                                                      1.0f, 2.0f, 3.0f, 4.0f,
                                                      1.0f, 2.0f, 3.0f, 4.0f]);
-        assert(vec4(v2, 3.0f, 4.0f).wgyzax == [4.0f, 2.0f, 2.0f, 3.0f, 4.0f, 1.0f]);
-        assert(vec4(v2.xyst).vector == [1.0f, 2.0f, 1.0f, 2.0f]);
+        assert((shared vec4(v2, 3.0f, 4.0f)).wgyzax == [4.0f, 2.0f, 2.0f, 3.0f, 4.0f, 1.0f]);
+        assert(cast(float[4])(shared vec4(v2.xyst)).vector == [1.0f, 2.0f, 1.0f, 2.0f]);
     }
     
     /// Returns the squared magnitude of the vector.
@@ -441,14 +441,14 @@ shared struct Vector(type, int dimension_) {
     }
     
     unittest {
-        assert(vec2(1.0f, 1.0f) == -vec2(-1.0f, -1.0f));
-        assert(vec2(-1.0f, 1.0f) == -vec2(1.0f, -1.0f));
+        assert(shared vec2(1.0f, 1.0f) == -shared vec2(-1.0f, -1.0f));
+        assert(shared vec2(-1.0f, 1.0f) == -shared vec2(1.0f, -1.0f));
 
-        assert(-vec3(1.0f, 1.0f, 1.0f) == vec3(-1.0f, -1.0f, -1.0f));
-        assert(-vec3(-1.0f, 1.0f, -1.0f) == vec3(1.0f, -1.0f, 1.0f));
+        assert(-shared vec3(1.0f, 1.0f, 1.0f) == shared vec3(-1.0f, -1.0f, -1.0f));
+        assert(-shared vec3(-1.0f, 1.0f, -1.0f) == shared vec3(1.0f, -1.0f, 1.0f));
 
-        assert(vec4(1.0f, 1.0f, 1.0f, 1.0f) == -vec4(-1.0f, -1.0f, -1.0f, -1.0f));
-        assert(vec4(-1.0f, 1.0f, -1.0f, 1.0f) == -vec4(1.0f, -1.0f, 1.0f, -1.0f));
+        assert(shared vec4(1.0f, 1.0f, 1.0f, 1.0f) == -shared vec4(-1.0f, -1.0f, -1.0f, -1.0f));
+        assert(shared vec4(-1.0f, 1.0f, -1.0f, 1.0f) == -shared vec4(1.0f, -1.0f, 1.0f, -1.0f));
     }
     
     // let the math begin!
@@ -495,32 +495,32 @@ shared struct Vector(type, int dimension_) {
     }
 
     unittest {
-        vec2 v2 = vec2(1.0f, 3.0f);
+        shared vec2 v2 = shared vec2(1.0f, 3.0f);
         2 * v2;
-        assert((v2*2.5f).vector == [2.5f, 7.5f]);
-        assert((v2+vec2(3.0f, 1.0f)).vector == [4.0f, 4.0f]);
-        assert((v2-vec2(1.0f, 3.0f)).vector == [0.0f, 0.0f]);
-        assert((v2*vec2(2.0f, 2.0f)) == 8.0f);
+        assert(cast(float[2])(v2*2.5f).vector == [2.5f, 7.5f]);
+        assert(cast(float[2])(v2+shared vec2(3.0f, 1.0f)).vector == [4.0f, 4.0f]);
+        assert(cast(float[2])(v2-shared vec2(1.0f, 3.0f)).vector == [0.0f, 0.0f]);
+        assert((v2*shared vec2(2.0f, 2.0f)) == 8.0f);
 
-        vec3 v3 = vec3(1.0f, 3.0f, 5.0f);
-        assert((v3*2.5f).vector == [2.5f, 7.5f, 12.5f]);
-        assert((v3+vec3(3.0f, 1.0f, -1.0f)).vector == [4.0f, 4.0f, 4.0f]);
-        assert((v3-vec3(1.0f, 3.0f, 5.0f)).vector == [0.0f, 0.0f, 0.0f]);
-        assert((v3*vec3(2.0f, 2.0f, 2.0f)) == 18.0f);
+        shared vec3 v3 = shared vec3(1.0f, 3.0f, 5.0f);
+        assert(cast(float[3])(v3*2.5f).vector == [2.5f, 7.5f, 12.5f]);
+        assert(cast(float[3])(v3+shared vec3(3.0f, 1.0f, -1.0f)).vector == [4.0f, 4.0f, 4.0f]);
+        assert(cast(float[3])(v3-shared vec3(1.0f, 3.0f, 5.0f)).vector == [0.0f, 0.0f, 0.0f]);
+        assert((v3*shared vec3(2.0f, 2.0f, 2.0f)) == 18.0f);
         
-        vec4 v4 = vec4(1.0f, 3.0f, 5.0f, 7.0f);
-        assert((v4*2.5f).vector == [2.5f, 7.5f, 12.5f, 17.5]);
-        assert((v4+vec4(3.0f, 1.0f, -1.0f, -3.0f)).vector == [4.0f, 4.0f, 4.0f, 4.0f]);
-        assert((v4-vec4(1.0f, 3.0f, 5.0f, 7.0f)).vector == [0.0f, 0.0f, 0.0f, 0.0f]);
-        assert((v4*vec4(2.0f, 2.0f, 2.0f, 2.0f)) == 32.0f);
+        shared vec4 v4 = shared vec4(1.0f, 3.0f, 5.0f, 7.0f);
+        assert(cast(float[4])(v4*2.5f).vector == [2.5f, 7.5f, 12.5f, 17.5]);
+        assert(cast(float[4])(v4+shared vec4(3.0f, 1.0f, -1.0f, -3.0f)).vector == [4.0f, 4.0f, 4.0f, 4.0f]);
+        assert(cast(float[4])(v4-shared vec4(1.0f, 3.0f, 5.0f, 7.0f)).vector == [0.0f, 0.0f, 0.0f, 0.0f]);
+        assert((v4*shared vec4(2.0f, 2.0f, 2.0f, 2.0f)) == 32.0f);
 
-        mat2 m2 = mat2(1.0f, 2.0f, 3.0f, 4.0f);
-        vec2 v2_2 = vec2(2.0f, 2.0f);
-        assert((v2_2*m2).vector == [8.0f, 12.0f]);
+        shared mat2 m2 = shared mat2(1.0f, 2.0f, 3.0f, 4.0f);
+        shared vec2 v2_2 = shared vec2(2.0f, 2.0f);
+        assert((cast(float[2])(v2_2*m2).vector == [8.0f, 12.0f]);
 
-        mat3 m3 = mat3(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
-        vec3 v3_2 = vec3(2.0f, 2.0f, 2.0f);
-        assert((v3_2*m3).vector == [24.0f, 30.0f, 36.0f]);
+        shared mat3 m3 = shared mat3(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+        shared vec3 v3_2 = shared vec3(2.0f, 2.0f, 2.0f);
+        assert(cast(float[3])(v3_2*m3).vector == [24.0f, 30.0f, 36.0f]);
     }
     
     void opOpAssign(string op : "*")(vt r) {
@@ -536,41 +536,41 @@ shared struct Vector(type, int dimension_) {
     }
         
     unittest {
-        vec2 v2 = vec2(1.0f, 3.0f);
+        shared vec2 v2 = shared vec2(1.0f, 3.0f);
         v2 *= 2.5f;
-        assert(v2.vector == [2.5f, 7.5f]);
-        v2 -= vec2(2.5f, 7.5f);
-        assert(v2.vector == [0.0f, 0.0f]);
-        v2 += vec2(1.0f, 3.0f);
-        assert(v2.vector == [1.0f, 3.0f]);
+        assert(cast(float[2])v2.vector == [2.5f, 7.5f]);
+        v2 -= shared vec2(2.5f, 7.5f);
+        assert(cast(float[2])v2.vector == [0.0f, 0.0f]);
+        v2 += shared vec2(1.0f, 3.0f);
+        assert(cast(float[2])v2.vector == [1.0f, 3.0f]);
         assert(v2.length == sqrt(10.0f));
         assert(v2.length_squared == 10.0f);
         assert((v2.magnitude == v2.length) && (v2.magnitude_squared == v2.length_squared));
-        assert(almost_equal(v2.normalized, vec2(1.0f/sqrt(10.0f), 3.0f/sqrt(10.0f))));
+        assert(almost_equal(v2.normalized, shared vec2(1.0f/sqrt(10.0f), 3.0f/sqrt(10.0f))));
 
-        vec3 v3 = vec3(1.0f, 3.0f, 5.0f);
+        shared vec3 v3 = shared vec3(1.0f, 3.0f, 5.0f);
         v3 *= 2.5f;
-        assert(v3.vector == [2.5f, 7.5f, 12.5f]);
-        v3 -= vec3(2.5f, 7.5f, 12.5f);
-        assert(v3.vector == [0.0f, 0.0f, 0.0f]);
-        v3 += vec3(1.0f, 3.0f, 5.0f);
-        assert(v3.vector == [1.0f, 3.0f, 5.0f]);
+        assert(cast(float[3])v3.vector == [2.5f, 7.5f, 12.5f]);
+        v3 -= shared vec3(2.5f, 7.5f, 12.5f);
+        assert(cast(float[3])v3.vector == [0.0f, 0.0f, 0.0f]);
+        v3 += shared vec3(1.0f, 3.0f, 5.0f);
+        assert(cast(float[3])v3.vector == [1.0f, 3.0f, 5.0f]);
         assert(v3.length == sqrt(35.0f));
         assert(v3.length_squared == 35.0f);
         assert((v3.magnitude == v3.length) && (v3.magnitude_squared == v3.length_squared));
-        assert(almost_equal(v3.normalized, vec3(1.0f/sqrt(35.0f), 3.0f/sqrt(35.0f), 5.0f/sqrt(35.0f))));
+        assert(almost_equal(v3.normalized, shared vec3(1.0f/sqrt(35.0f), 3.0f/sqrt(35.0f), 5.0f/sqrt(35.0f))));
             
-        vec4 v4 = vec4(1.0f, 3.0f, 5.0f, 7.0f);
+        shared vec4 v4 = shared vec4(1.0f, 3.0f, 5.0f, 7.0f);
         v4 *= 2.5f;
-        assert(v4.vector == [2.5f, 7.5f, 12.5f, 17.5]);
-        v4 -= vec4(2.5f, 7.5f, 12.5f, 17.5f);
-        assert(v4.vector == [0.0f, 0.0f, 0.0f, 0.0f]);
-        v4 += vec4(1.0f, 3.0f, 5.0f, 7.0f);
-        assert(v4.vector == [1.0f, 3.0f, 5.0f, 7.0f]);
+        assert(cast(float[4])v4.vector == [2.5f, 7.5f, 12.5f, 17.5]);
+        v4 -= shared vec4(2.5f, 7.5f, 12.5f, 17.5f);
+        assert(cast(float[4])v4.vector == [0.0f, 0.0f, 0.0f, 0.0f]);
+        v4 += shared vec4(1.0f, 3.0f, 5.0f, 7.0f);
+        assert(cast(float[4])v4.vector == [1.0f, 3.0f, 5.0f, 7.0f]);
         assert(v4.length == sqrt(84.0f));
         assert(v4.length_squared == 84.0f);
         assert((v4.magnitude == v4.length) && (v4.magnitude_squared == v4.length_squared));
-        assert(almost_equal(v4.normalized, vec4(1.0f/sqrt(84.0f), 3.0f/sqrt(84.0f), 5.0f/sqrt(84.0f), 7.0f/sqrt(84.0f))));
+        assert(almost_equal(v4.normalized, shared vec4(1.0f/sqrt(84.0f), 3.0f/sqrt(84.0f), 5.0f/sqrt(84.0f), 7.0f/sqrt(84.0f))));
     }
        
     const int opCmp(ref shared const Vector vec) const {
@@ -609,35 +609,35 @@ shared struct Vector(type, int dimension_) {
     }
     
     unittest {
-        assert(vec2(1.0f, 2.0f) == vec2(1.0f, 2.0f));
-        assert(vec2(1.0f, 2.0f) != vec2(1.0f, 1.0f));
-        assert(vec2(1.0f, 2.0f) == vec2d(1.0, 2.0));
-        assert(vec2(1.0f, 2.0f) != vec2d(1.0, 1.0));
-        assert(vec2(1.0f, 2.0f) == vec2(1.0f, 2.0f).vector);
-        assert(vec2(1.0f, 2.0f) != vec2(1.0f, 1.0f).vector);
-        assert(vec2(1.0f, 2.0f) == vec2d(1.0, 2.0).vector);
-        assert(vec2(1.0f, 2.0f) != vec2d(1.0, 1.0).vector);
+        assert(shared vec2(1.0f, 2.0f) == shared vec2(1.0f, 2.0f));
+        assert(shared vec2(1.0f, 2.0f) != shared vec2(1.0f, 1.0f));
+        assert(shared vec2(1.0f, 2.0f) == shared vec2d(1.0, 2.0));
+        assert(shared vec2(1.0f, 2.0f) != shared vec2d(1.0, 1.0));
+        assert(shared vec2(1.0f, 2.0f) == (shared vec2(1.0f, 2.0f)).vector);
+        assert(shared vec2(1.0f, 2.0f) != (shared vec2(1.0f, 1.0f)).vector);
+        assert(shared vec2(1.0f, 2.0f) == (shared vec2d(1.0, 2.0)).vector);
+        assert(shared vec2(1.0f, 2.0f) != (shared vec2d(1.0, 1.0)).vector);
                 
-        assert(vec3(1.0f, 2.0f, 3.0f) == vec3(1.0f, 2.0f, 3.0f));
-        assert(vec3(1.0f, 2.0f, 3.0f) != vec3(1.0f, 2.0f, 2.0f));
-        assert(vec3(1.0f, 2.0f, 3.0f) == vec3d(1.0, 2.0, 3.0));
-        assert(vec3(1.0f, 2.0f, 3.0f) != vec3d(1.0, 2.0, 2.0));
-        assert(vec3(1.0f, 2.0f, 3.0f) == vec3(1.0f, 2.0f, 3.0f).vector);
-        assert(vec3(1.0f, 2.0f, 3.0f) != vec3(1.0f, 2.0f, 2.0f).vector);
-        assert(vec3(1.0f, 2.0f, 3.0f) == vec3d(1.0, 2.0, 3.0).vector);
-        assert(vec3(1.0f, 2.0f, 3.0f) != vec3d(1.0, 2.0, 2.0).vector);
+        assert(shared vec3(1.0f, 2.0f, 3.0f) == shared vec3(1.0f, 2.0f, 3.0f));
+        assert(shared vec3(1.0f, 2.0f, 3.0f) != shared vec3(1.0f, 2.0f, 2.0f));
+        assert(shared vec3(1.0f, 2.0f, 3.0f) == shared vec3d(1.0, 2.0, 3.0));
+        assert(shared vec3(1.0f, 2.0f, 3.0f) != shared vec3d(1.0, 2.0, 2.0));
+        assert(shared vec3(1.0f, 2.0f, 3.0f) == (shared vec3(1.0f, 2.0f, 3.0f)).vector);
+        assert(shared vec3(1.0f, 2.0f, 3.0f) != (shared vec3(1.0f, 2.0f, 2.0f)).vector);
+        assert(shared vec3(1.0f, 2.0f, 3.0f) == (shared vec3d(1.0, 2.0, 3.0)).vector);
+        assert(shared vec3(1.0f, 2.0f, 3.0f) != (shared vec3d(1.0, 2.0, 2.0)).vector);
                 
-        assert(vec4(1.0f, 2.0f, 3.0f, 4.0f) == vec4(1.0f, 2.0f, 3.0f, 4.0f));
-        assert(vec4(1.0f, 2.0f, 3.0f, 4.0f) != vec4(1.0f, 2.0f, 3.0f, 3.0f));
-        assert(vec4(1.0f, 2.0f, 3.0f, 4.0f) == vec4d(1.0, 2.0, 3.0, 4.0));
-        assert(vec4(1.0f, 2.0f, 3.0f, 4.0f) != vec4d(1.0, 2.0, 3.0, 3.0));
-        assert(vec4(1.0f, 2.0f, 3.0f, 4.0f) == vec4(1.0f, 2.0f, 3.0f, 4.0f).vector);
-        assert(vec4(1.0f, 2.0f, 3.0f, 4.0f) != vec4(1.0f, 2.0f, 3.0f, 3.0f).vector);
-        assert(vec4(1.0f, 2.0f, 3.0f, 4.0f) == vec4d(1.0, 2.0, 3.0, 4.0).vector);
-        assert(vec4(1.0f, 2.0f, 3.0f, 4.0f) != vec4d(1.0, 2.0, 3.0, 3.0).vector);
+        assert(shared vec4(1.0f, 2.0f, 3.0f, 4.0f) == shared vec4(1.0f, 2.0f, 3.0f, 4.0f));
+        assert(shared vec4(1.0f, 2.0f, 3.0f, 4.0f) != shared vec4(1.0f, 2.0f, 3.0f, 3.0f));
+        assert(shared vec4(1.0f, 2.0f, 3.0f, 4.0f) == shared vec4d(1.0, 2.0, 3.0, 4.0));
+        assert(shared vec4(1.0f, 2.0f, 3.0f, 4.0f) != shared vec4d(1.0, 2.0, 3.0, 3.0));
+        assert(shared vec4(1.0f, 2.0f, 3.0f, 4.0f) == (shared vec4(1.0f, 2.0f, 3.0f, 4.0f)).vector);
+        assert(shared vec4(1.0f, 2.0f, 3.0f, 4.0f) != (shared vec4(1.0f, 2.0f, 3.0f, 3.0f)).vector);
+        assert(shared vec4(1.0f, 2.0f, 3.0f, 4.0f) == (shared vec4d(1.0, 2.0, 3.0, 4.0)).vector);
+        assert(shared vec4(1.0f, 2.0f, 3.0f, 4.0f) != (shared vec4d(1.0, 2.0, 3.0, 3.0)).vector);
     
-        assert(!(vec4(float.nan)));
-        if(vec4(1.0f)) { }
+        assert(!(shared vec4(float.nan)));
+        if((shared vec4(1.0f))) { }
         else { assert(false); }
     }
         
@@ -721,7 +721,7 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
     alias matrix this;
     
     unittest {
-        mat2 m2 = mat2(0.0f, 1.0f, 2.0f, 3.0f);
+        shared mat2 m2 = shared mat2(0.0f, 1.0f, 2.0f, 3.0f);
         assert(m2[0][0] == 0.0f);
         assert(m2[0][1] == 1.0f);
         assert(m2[1][0] == 2.0f);
@@ -729,7 +729,7 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         m2[0..1] = [2.0f, 2.0f];
         assert(m2 == [[2.0f, 2.0f], [2.0f, 3.0f]]);
         
-        mat3 m3 = mat3(0.0f, 0.1f, 0.2f, 1.0f, 1.1f, 1.2f, 2.0f, 2.1f, 2.2f);
+        shared mat3 m3 = shared mat3(0.0f, 0.1f, 0.2f, 1.0f, 1.1f, 1.2f, 2.0f, 2.1f, 2.2f);
         assert(m3[0][1] == 0.1f);
         assert(m3[2][0] == 2.0f);
         assert(m3[1][2] == 1.2f);
@@ -738,7 +738,7 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
                       [1.0f, 1.1f, 1.2f],
                       [2.0f, 2.1f, 2.2f]]);
         
-        mat4 m4 = mat4(0.0f, 0.1f, 0.2f, 0.3f,
+        shared mat4 m4 = shared mat4(0.0f, 0.1f, 0.2f, 0.3f,
                        1.0f, 1.1f, 1.2f, 1.3f,
                        2.0f, 2.1f, 2.2f, 2.3f,
                        3.0f, 3.1f, 3.2f, 3.3f);
@@ -811,7 +811,7 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         } else static if(is(T : mt)) {
             matrix[i / cols][i % cols] = head;
             construct!(i + 1)(tail);
-        } else static if(is(T == Vector!(mt, cols))) {
+        } else static if(is(T == shared Vector!(mt, cols))) {
             static if(i % cols == 0) {
                 matrix[i / cols] = head.vector;
                 construct!(i + T.dimension)(tail);
@@ -819,7 +819,7 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
                 static assert(false, "Can't convert Vector into the matrix. Maybe it doesn't align to the columns correctly or dimension doesn't fit");
             }
         } else {
-            static assert(false, "Matrix constructor argument must be of type " ~ mt.stringof ~ " or Vector, not " ~ T.stringof);
+            static assert(false, "Matrix constructor argument must be of type " ~ mt.stringof ~ " or shared Vector, not " ~ T.stringof);
         }
     }
     
@@ -892,10 +892,10 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
     }
     
     unittest {
-        mat2 m2 = mat2(1.0f, 1.0f, vec2(2.0f, 2.0f));
-        assert(m2.matrix == [[1.0f, 1.0f], [2.0f, 2.0f]]);
+        shared mat2 m2 = shared mat2(1.0f, 1.0f, shared vec2(2.0f, 2.0f));
+        assert(cast(float[2][2])m2.matrix == [[1.0f, 1.0f], [2.0f, 2.0f]]);
         m2.clear(3.0f);
-        assert(m2.matrix == [[3.0f, 3.0f], [3.0f, 3.0f]]);
+        assert(cast(float[2][2])m2.matrix == [[3.0f, 3.0f], [3.0f, 3.0f]]);
         assert(m2.isFinite);
         m2.clear(float.nan);
         assert(!m2.isFinite);
@@ -904,38 +904,38 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         m2.clear(0.0f);
         assert(m2.isFinite);
         
-        mat3 m3 = mat3(1.0f);
-        assert(m3.matrix == [[1.0f, 1.0f, 1.0f],
+        shared mat3 m3 = shared mat3(1.0f);
+        assert(cast(float[3][3])m3.matrix == [[1.0f, 1.0f, 1.0f],
                              [1.0f, 1.0f, 1.0f],
                              [1.0f, 1.0f, 1.0f]]);
         
-        mat4 m4 = mat4(vec4(1.0f, 1.0f, 1.0f, 1.0f),
+        shared mat4 m4 = shared mat4(shared vec4(1.0f, 1.0f, 1.0f, 1.0f),
                             2.0f, 2.0f, 2.0f, 2.0f,
                             3.0f, 3.0f, 3.0f, 3.0f,
-                       vec4(4.0f, 4.0f, 4.0f, 4.0f));
-        assert(m4.matrix == [[1.0f, 1.0f, 1.0f, 1.0f],
+                       shared vec4(4.0f, 4.0f, 4.0f, 4.0f));
+        assert(cast(float[4][4])m4.matrix == [[1.0f, 1.0f, 1.0f, 1.0f],
                              [2.0f, 2.0f, 2.0f, 2.0f],
                              [3.0f, 3.0f, 3.0f, 3.0f],
                              [4.0f, 4.0f, 4.0f, 4.0f]]);
-        assert(mat3(m4).matrix == [[1.0f, 1.0f, 1.0f],
+        assert(cast(float[3][3])(shared mat3(m4)).matrix == [[1.0f, 1.0f, 1.0f],
                                    [2.0f, 2.0f, 2.0f],
                                    [3.0f, 3.0f, 3.0f]]);
-        assert(mat2(mat3(m4)).matrix == [[1.0f, 1.0f], [2.0f, 2.0f]]);
-        assert(mat2(m4).matrix == mat2(mat3(m4)).matrix);
-        assert(mat4(mat3(m4)).matrix == [[1.0f, 1.0f, 1.0f, 0.0f],
+        assert(cast(float[2][2])(shared mat2(shared mat3(m4))).matrix == [[1.0f, 1.0f], [2.0f, 2.0f]]);
+        assert((shared mat2(m4)).matrix == (shared mat2(shared mat3(m4))).matrix);
+        assert(cast(float[4][4])(shared mat4(shared mat3(m4))).matrix == [[1.0f, 1.0f, 1.0f, 0.0f],
                                          [2.0f, 2.0f, 2.0f, 0.0f],
                                          [3.0f, 3.0f, 3.0f, 0.0f],
                                          [0.0f, 0.0f, 0.0f, 1.0f]]);
 
-        Matrix!(float, 2, 3) mt1 = Matrix!(float, 2, 3)(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f);
-        Matrix!(float, 3, 2) mt2 = Matrix!(float, 3, 2)(6.0f, -1.0f, 3.0f, 2.0f, 0.0f, -3.0f);
+        shared Matrix!(float, 2, 3) mt1 = shared Matrix!(float, 2, 3)(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f);
+        shared Matrix!(float, 3, 2) mt2 = shared Matrix!(float, 3, 2)(6.0f, -1.0f, 3.0f, 2.0f, 0.0f, -3.0f);
         
-        assert(mt1.matrix == [[1.0f, 2.0f, 3.0f], [4.0f, 5.0f, 6.0f]]);
-        assert(mt2.matrix == [[6.0f, -1.0f], [3.0f, 2.0f], [0.0f, -3.0f]]);
+        assert(cast(float[2][3])mt1.matrix == [[1.0f, 2.0f, 3.0f], [4.0f, 5.0f, 6.0f]]);
+        assert(cast(float[3][2])mt2.matrix == [[6.0f, -1.0f], [3.0f, 2.0f], [0.0f, -3.0f]]);
 
-        static assert(!__traits(compiles, mat2(1, 2, 1)));
-        static assert(!__traits(compiles, mat3(1, 2, 3, 1, 2, 3, 1, 2)));
-        static assert(!__traits(compiles, mat4(1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3)));
+        static assert(!__traits(compiles, shared mat2(1, 2, 1)));
+        static assert(!__traits(compiles, shared mat3(1, 2, 3, 1, 2, 3, 1, 2)));
+        static assert(!__traits(compiles, shared mat4(1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3)));
     }
     
     static if(rows == cols) {
@@ -965,30 +965,30 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         }
         
         unittest {
-            mat2 m2 = mat2(1.0f);
+            shared mat2 m2 = shared mat2(1.0f);
             m2.transpose();
-            assert(m2.matrix == mat2(1.0f).matrix);
+            assert(m2.matrix == (shared mat2(1.0f)).matrix);
             m2.make_identity();
-            assert(m2.matrix == [[1.0f, 0.0f],
+            assert(cast(float[2][2])m2.matrix == [[1.0f, 0.0f],
                                  [0.0f, 1.0f]]);
             m2.transpose();
-            assert(m2.matrix == [[1.0f, 0.0f],
+            assert(cast(float[2][2])m2.matrix == [[1.0f, 0.0f],
                                  [0.0f, 1.0f]]);
             assert(m2.matrix == m2.identity.matrix);
             
-            mat3 m3 = mat3(1.1f, 1.2f, 1.3f,
+            shared mat3 m3 = shared mat3(1.1f, 1.2f, 1.3f,
                            2.1f, 2.2f, 2.3f,
                            3.1f, 3.2f, 3.3f);
             m3.transpose();
-            assert(m3.matrix == [[1.1f, 2.1f, 3.1f],
+            assert(cast(float[3][3])m3.matrix == [[1.1f, 2.1f, 3.1f],
                                  [1.2f, 2.2f, 3.2f],
                                  [1.3f, 2.3f, 3.3f]]);
             
-            mat4 m4 = mat4(2.0f);
+            shared mat4 m4 = shared mat4(2.0f);
             m4.transpose();
-            assert(m4.matrix == mat4(2.0f).matrix);
+            assert(m4.matrix == (shared mat4(2.0f)).matrix);
             m4.make_identity();
-            assert(m4.matrix == [[1.0f, 0.0f, 0.0f, 0.0f],
+            assert(cast(float[4][4])m4.matrix == [[1.0f, 0.0f, 0.0f, 0.0f],
                                  [0.0f, 1.0f, 0.0f, 0.0f],
                                  [0.0f, 0.0f, 1.0f, 0.0f],
                                  [0.0f, 0.0f, 0.0f, 1.0f]]);
@@ -1050,7 +1050,7 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
 
         unittest {
             assert(mat2.scaling(3, 3).matrix == mat2.identity.scale(3, 3).matrix);
-            assert(mat2.scaling(3, 3).matrix == [[3.0f, 0.0f], [0.0f, 3.0f]]);
+            assert(cast(float[2][2])mat2.scaling(3, 3).matrix == [[3.0f, 0.0f], [0.0f, 3.0f]]);
         }
 
     } else static if((rows == 3) && (cols == 3)) {
@@ -1368,13 +1368,13 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         unittest {
             shared mat3 m3 = shared mat3(1.0f);
             assert(m3.translation(1.0f, 2.0f, 3.0f).matrix == mat3.translation(1.0f, 2.0f, 3.0f).matrix);
-            assert(mat3.translation(1.0f, 2.0f, 3.0f).matrix == [[1.0f, 0.0f, 1.0f],
+            assert(cast(float[3][3])mat3.translation(1.0f, 2.0f, 3.0f).matrix == [[1.0f, 0.0f, 1.0f],
                                                                  [0.0f, 1.0f, 2.0f],
                                                                  [0.0f, 0.0f, 3.0f]]);
             assert(mat3.identity.translate(0.0f, 1.0f, 2.0f).matrix == mat3.translation(0.0f, 1.0f, 2.0f).matrix);
 
             assert(m3.scaling(0.0f, 1.0f, 2.0f).matrix == mat3.scaling(0.0f, 1.0f, 2.0f).matrix);
-            assert(mat3.scaling(0.0f, 1.0f, 2.0f).matrix == [[0.0f, 0.0f, 0.0f],
+            assert(cast(float[3][3])mat3.scaling(0.0f, 1.0f, 2.0f).matrix == [[0.0f, 0.0f, 0.0f],
                                                              [0.0f, 1.0f, 0.0f],
                                                              [0.0f, 0.0f, 2.0f]]);
             assert(mat3.identity.scale(0.0f, 1.0f, 2.0f).matrix == mat3.scaling(0.0f, 1.0f, 2.0f).matrix);
@@ -1383,14 +1383,14 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
 
             shared mat4 m4 = shared mat4(1.0f);
             assert(m4.translation(1.0f, 2.0f, 3.0f).matrix == mat4.translation(1.0f, 2.0f, 3.0f).matrix);
-            assert(mat4.translation(1.0f, 2.0f, 3.0f).matrix == [[1.0f, 0.0f, 0.0f, 1.0f],
+            assert(cast(float[4][4])mat4.translation(1.0f, 2.0f, 3.0f).matrix == [[1.0f, 0.0f, 0.0f, 1.0f],
                                                                  [0.0f, 1.0f, 0.0f, 2.0f],
                                                                  [0.0f, 0.0f, 1.0f, 3.0f],
                                                                  [0.0f, 0.0f, 0.0f, 1.0f]]);
             assert(mat4.identity.translate(0.0f, 1.0f, 2.0f).matrix == mat4.translation(0.0f, 1.0f, 2.0f).matrix);
 
             assert(m4.scaling(0.0f, 1.0f, 2.0f).matrix == mat4.scaling(0.0f, 1.0f, 2.0f).matrix);
-            assert(mat4.scaling(0.0f, 1.0f, 2.0f).matrix == [[0.0f, 0.0f, 0.0f, 0.0f],
+            assert(cast(float[4][4])mat4.scaling(0.0f, 1.0f, 2.0f).matrix == [[0.0f, 0.0f, 0.0f, 0.0f],
                                                              [0.0f, 1.0f, 0.0f, 0.0f],
                                                              [0.0f, 0.0f, 2.0f, 0.0f],
                                                              [0.0f, 0.0f, 0.0f, 1.0f]]);
@@ -1501,15 +1501,15 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
             }
 
             unittest {
-                assert(mat4.xrotation(0).matrix == [[1.0f, 0.0f, 0.0f, 0.0f],
+                assert(cast(float[4][4])mat4.xrotation(0).matrix == [[1.0f, 0.0f, 0.0f, 0.0f],
                                                     [0.0f, 1.0f, -0.0f, 0.0f],
                                                     [0.0f, 0.0f, 1.0f, 0.0f],
                                                     [0.0f, 0.0f, 0.0f, 1.0f]]);
-                assert(mat4.yrotation(0).matrix == [[1.0f, 0.0f, 0.0f, 0.0f],
+                assert(cast(float[4][4])mat4.yrotation(0).matrix == [[1.0f, 0.0f, 0.0f, 0.0f],
                                                     [0.0f, 1.0f, 0.0f, 0.0f],
                                                     [0.0f, 0.0f, 1.0f, 0.0f],
                                                     [0.0f, 0.0f, 0.0f, 1.0f]]);
-                assert(mat4.zrotation(0).matrix == [[1.0f, -0.0f, 0.0f, 0.0f],
+                assert(cast(float[4][4])mat4.zrotation(0).matrix == [[1.0f, -0.0f, 0.0f, 0.0f],
                                                     [0.0f, 1.0f, 0.0f, 0.0f],
                                                     [0.0f, 0.0f, 1.0f, 0.0f],
                                                     [0.0f, 0.0f, 0.0f, 1.0f]]);
@@ -1560,28 +1560,28 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         }
         
         unittest {
-            mat3 m3 = mat3(0.0f, 1.0f, 2.0f,
+            shared mat3 m3 = shared mat3(0.0f, 1.0f, 2.0f,
                            3.0f, 4.0f, 5.0f,
                            6.0f, 7.0f, 1.0f);
-            assert(m3.get_translation().matrix == [[1.0f, 0.0f, 2.0f], [0.0f, 1.0f, 5.0f], [0.0f, 0.0f, 1.0f]]);
+            assert(cast(float[3][3])m3.get_translation().matrix == [[1.0f, 0.0f, 2.0f], [0.0f, 1.0f, 5.0f], [0.0f, 0.0f, 1.0f]]);
             m3.set_translation(mat3.identity);
             assert(mat3.identity.matrix == m3.get_translation().matrix);
             m3.set_translation([2.0f, 5.0f]);
-            assert(m3.get_translation().matrix == [[1.0f, 0.0f, 2.0f], [0.0f, 1.0f, 5.0f], [0.0f, 0.0f, 1.0f]]);
+            assert(cast(float[3][3])m3.get_translation().matrix == [[1.0f, 0.0f, 2.0f], [0.0f, 1.0f, 5.0f], [0.0f, 0.0f, 1.0f]]);
             assert(mat3.identity.matrix == mat3.identity.get_translation().matrix);
 
-            mat4 m4 = mat4(0.0f, 1.0f, 2.0f, 3.0f,
+            shared mat4 m4 = shared mat4(0.0f, 1.0f, 2.0f, 3.0f,
                            4.0f, 5.0f, 6.0f, 7.0f,
                            8.0f, 9.0f, 10.0f, 11.0f,
                            12.0f, 13.0f, 14.0f, 1.0f);
-            assert(m4.get_translation().matrix == [[1.0f, 0.0f, 0.0f, 3.0f],
+            assert(cast(float[4][4])m4.get_translation().matrix == [[1.0f, 0.0f, 0.0f, 3.0f],
                                        [0.0f, 1.0f, 0.0f, 7.0f],
                                        [0.0f, 0.0f, 1.0f, 11.0f],
                                        [0.0f, 0.0f, 0.0f, 1.0f]]);
             m4.set_translation(mat4.identity);
             assert(mat4.identity.matrix == m4.get_translation().matrix);
             m4.set_translation([3.0f, 7.0f, 11.0f]);
-            assert(m4.get_translation().matrix == [[1.0f, 0.0f, 0.0f, 3.0f],
+            assert(cast(float[4][4])m4.get_translation().matrix == [[1.0f, 0.0f, 0.0f, 3.0f],
                                        [0.0f, 1.0f, 0.0f, 7.0f],
                                        [0.0f, 0.0f, 1.0f, 11.0f],
                                        [0.0f, 0.0f, 0.0f, 1.0f]]);
@@ -1616,28 +1616,28 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         }
         
         unittest {
-            mat3 m3 = mat3(0.0f, 1.0f, 2.0f,
+            shared mat3 m3 = shared mat3(0.0f, 1.0f, 2.0f,
                            3.0f, 4.0f, 5.0f,
                            6.0f, 7.0f, 1.0f);
-            assert(m3.get_scale().matrix == [[0.0f, 0.0f, 0.0f], [0.0f, 4.0f, 0.0f], [0.0f, 0.0f, 1.0f]]);
+            assert(cast(float[3][3])m3.get_scale().matrix == [[0.0f, 0.0f, 0.0f], [0.0f, 4.0f, 0.0f], [0.0f, 0.0f, 1.0f]]);
             m3.set_scale(mat3.identity);
             assert(mat3.identity.matrix == m3.get_scale().matrix);
             m3.set_scale([0.0f, 4.0f]);
-            assert(m3.get_scale().matrix == [[0.0f, 0.0f, 0.0f], [0.0f, 4.0f, 0.0f], [0.0f, 0.0f, 1.0f]]);
+            assert(cast(float[3][3])m3.get_scale().matrix == [[0.0f, 0.0f, 0.0f], [0.0f, 4.0f, 0.0f], [0.0f, 0.0f, 1.0f]]);
             assert(mat3.identity.matrix == mat3.identity.get_scale().matrix);
 
-            mat4 m4 = mat4(0.0f, 1.0f, 2.0f, 3.0f,
+            shared mat4 m4 = shared mat4(0.0f, 1.0f, 2.0f, 3.0f,
                            4.0f, 5.0f, 6.0f, 7.0f,
                            8.0f, 9.0f, 10.0f, 11.0f,
                            12.0f, 13.0f, 14.0f, 1.0f);
-            assert(m4.get_scale().matrix == [[0.0f, 0.0f, 0.0f, 0.0f],
+            assert(cast(float[4][4])m4.get_scale().matrix == [[0.0f, 0.0f, 0.0f, 0.0f],
                                        [0.0f, 5.0f, 0.0f, 0.0f],
                                        [0.0f, 0.0f, 10.0f, 0.0f],
                                        [0.0f, 0.0f, 0.0f, 1.0f]]);
             m4.set_scale(mat4.identity);
             assert(mat4.identity.matrix == m4.get_scale().matrix);
             m4.set_scale([0.0f, 5.0f, 10.0f]);
-            assert(m4.get_scale().matrix == [[0.0f, 0.0f, 0.0f, 0.0f],
+            assert(cast(float[4][4])m4.get_scale().matrix == [[0.0f, 0.0f, 0.0f, 0.0f],
                                        [0.0f, 5.0f, 0.0f, 0.0f],
                                        [0.0f, 0.0f, 10.0f, 0.0f],
                                        [0.0f, 0.0f, 0.0f, 1.0f]]);
@@ -1667,25 +1667,25 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         }
         
         unittest {
-            mat3 m3 = mat3(0.0f, 1.0f, 2.0f,
+            shared mat3 m3 = shared mat3(0.0f, 1.0f, 2.0f,
                            3.0f, 4.0f, 5.0f,
                            6.0f, 7.0f, 1.0f);
-            assert(m3.get_rotation().matrix == [[0.0f, 1.0f, 2.0f], [3.0f, 4.0f, 5.0f], [6.0f, 7.0f, 1.0f]]);
+            assert(cast(float[3][3])m3.get_rotation().matrix == [[0.0f, 1.0f, 2.0f], [3.0f, 4.0f, 5.0f], [6.0f, 7.0f, 1.0f]]);
             m3.set_rotation(mat3.identity);
             assert(mat3.identity.matrix == m3.get_rotation().matrix);
-            m3.set_rotation(mat3(0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 1.0f));
-            assert(m3.get_rotation().matrix == [[0.0f, 1.0f, 2.0f], [3.0f, 4.0f, 5.0f], [6.0f, 7.0f, 1.0f]]);
+            m3.set_rotation(shared mat3(0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 1.0f));
+            assert(cast(float[3][3])m3.get_rotation().matrix == [[0.0f, 1.0f, 2.0f], [3.0f, 4.0f, 5.0f], [6.0f, 7.0f, 1.0f]]);
             assert(mat3.identity.matrix == mat3.identity.get_rotation().matrix);
 
-            mat4 m4 = mat4(0.0f, 1.0f, 2.0f, 3.0f,
+            shared mat4 m4 = shared mat4(0.0f, 1.0f, 2.0f, 3.0f,
                            4.0f, 5.0f, 6.0f, 7.0f,
                            8.0f, 9.0f, 10.0f, 11.0f,
                            12.0f, 13.0f, 14.0f, 1.0f);
-            assert(m4.get_rotation().matrix == [[0.0f, 1.0f, 2.0f], [4.0f, 5.0f, 6.0f], [8.0f, 9.0f, 10.0f]]);
+            assert(cast(float[3][3])m4.get_rotation().matrix == [[0.0f, 1.0f, 2.0f], [4.0f, 5.0f, 6.0f], [8.0f, 9.0f, 10.0f]]);
             m4.set_rotation(mat3.identity);
             assert(mat3.identity.matrix == m4.get_rotation().matrix);
-            m4.set_rotation(mat3(0.0f, 1.0f, 2.0f, 4.0f, 5.0f, 6.0f, 8.0f, 9.0f, 10.0f));
-            assert(m4.get_rotation().matrix == [[0.0f, 1.0f, 2.0f], [4.0f, 5.0f, 6.0f], [8.0f, 9.0f, 10.0f]]);
+            m4.set_rotation(shared mat3(0.0f, 1.0f, 2.0f, 4.0f, 5.0f, 6.0f, 8.0f, 9.0f, 10.0f));
+            assert(cast(float[3][3])m4.get_rotation().matrix == [[0.0f, 1.0f, 2.0f], [4.0f, 5.0f, 6.0f], [8.0f, 9.0f, 10.0f]]);
             assert(mat3.identity.matrix == mat4.identity.get_rotation().matrix);
         }
         
@@ -1710,30 +1710,30 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
     }
     
     unittest {
-        mat2 m2 = mat2(1.0f, 2.0f, vec2(3.0f, 4.0f));
+        shared mat2 m2 = shared mat2(1.0f, 2.0f, shared vec2(3.0f, 4.0f));
         assert(m2.det == -2.0f);
-        assert(m2.inverse.matrix == [[-2.0f, 1.0f], [1.5f, -0.5f]]);
+        assert(cast(float[2][2])m2.inverse.matrix == [[-2.0f, 1.0f], [1.5f, -0.5f]]);
         
-        mat3 m3 = mat3(1.0f, -2.0f, 3.0f,
+        shared mat3 m3 = shared mat3(1.0f, -2.0f, 3.0f,
                        7.0f, -1.0f, 0.0f,
                        3.0f, 2.0f, -4.0f);
         assert(m3.det == -1.0f);
-        assert(m3.inverse.matrix == [[-4.0f, 2.0f, -3.0f],
+        assert(cast(float[3][3])m3.inverse.matrix == [[-4.0f, 2.0f, -3.0f],
                                      [-28.0f, 13.0f, -21.0f],
                                      [-17.0f, 8.0f, -13.0f]]);
 
-        mat4 m4 = mat4(1.0f, 2.0f, 3.0f, 4.0f,
+        shared mat4 m4 = shared mat4(1.0f, 2.0f, 3.0f, 4.0f,
                        -2.0f, 1.0f, 5.0f, -2.0f,
                        2.0f, -1.0f, 7.0f, 1.0f,
                        3.0f, -3.0f, 2.0f, 0.0f);
         assert(m4.det == -8.0f);
-        assert(m4.inverse.matrix == [[6.875f, 7.875f, -11.75f, 11.125f],
+        assert(cast(float[4][4])m4.inverse.matrix == [[6.875f, 7.875f, -11.75f, 11.125f],
                                      [6.625f, 7.625f, -11.25f, 10.375f],
                                      [-0.375f, -0.375f, 0.75f, -0.625f],
                                      [-4.5f, -5.5f, 8.0f, -7.5f]]);
     }
 
-    private void mms(mt inp, ref Matrix mat) const { // mat * scalar
+    private void mms(mt inp, ref shared Matrix mat) const { // mat * scalar
         for(int r = 0; r < rows; r++) {
             for(int c = 0; c < cols; c++) {
                 mat.matrix[r][c] = matrix[r][c] * inp;
@@ -1741,7 +1741,7 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         }
     }
 
-    private void masm(string op)(Matrix inp, ref Matrix mat) const { // mat + or - mat
+    private void masm(string op)(shared Matrix inp, ref shared Matrix mat) const { // mat + or - mat
         foreach(r; TupleRange!(0, rows)) {
             foreach(c; TupleRange!(0, cols)) {
                 mat.matrix[r][c] = mixin("inp.matrix[r][c]" ~ op ~ "matrix[r][c]");
@@ -1778,18 +1778,18 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         return ret;
     }
     
-    Matrix opBinary(string op : "*")(mt inp) const {
-        Matrix ret;
+    shared(Matrix) opBinary(string op : "*")(mt inp) const {
+        shared Matrix ret;
         mms(inp, ret);
         return ret;       
     }
     
-    Matrix opBinaryRight(string op : "*")(mt inp) const {
+    shared(Matrix) opBinaryRight(string op : "*")(mt inp) const {
         return this.opBinary!(op)(inp);
     }
     
-    Matrix opBinary(string op)(Matrix inp) const if((op == "+") || (op == "-")) {
-        Matrix ret;
+    shared(Matrix) opBinary(string op)(shared Matrix inp) const if((op == "+") || (op == "-")) {
+        shared Matrix ret;
         masm!(op)(inp, ret);
         return ret;
     }
@@ -1803,37 +1803,37 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
     }
     
     unittest {
-        mat2 m2 = mat2(1.0f, 2.0f, 3.0f, 4.0f);
-        vec2 v2 = vec2(2.0f, 2.0f);
-        assert((m2*2).matrix == [[2.0f, 4.0f], [6.0f, 8.0f]]);
+        shared mat2 m2 = shared mat2(1.0f, 2.0f, 3.0f, 4.0f);
+        shared vec2 v2 = shared vec2(2.0f, 2.0f);
+        assert(cast(float[2][2])(m2*2).matrix == [[2.0f, 4.0f], [6.0f, 8.0f]]);
         assert((2*m2).matrix == (m2*2).matrix);
         m2 *= 2;
-        assert(m2.matrix == [[2.0f, 4.0f], [6.0f, 8.0f]]);
-        assert((m2*v2).vector == [12.0f, 28.0f]);
+        assert(cast(float[2][2])m2.matrix == [[2.0f, 4.0f], [6.0f, 8.0f]]);
+        assert(cast(float[2])(m2*v2).vector == [12.0f, 28.0f]);
         assert((v2*m2).vector == [16.0f, 24.0f]);
-        assert((m2*m2).matrix == [[28.0f, 40.0f], [60.0f, 88.0f]]);
-        assert((m2-m2).matrix == [[0.0f, 0.0f], [0.0f, 0.0f]]);
-        assert((m2+m2).matrix == [[4.0f, 8.0f], [12.0f, 16.0f]]);
+        assert(cast(float[2][2])(m2*m2).matrix == [[28.0f, 40.0f], [60.0f, 88.0f]]);
+        assert(cast(float[2][2])(m2-m2).matrix == [[0.0f, 0.0f], [0.0f, 0.0f]]);
+        assert(cast(float[2][2])(m2+m2).matrix == [[4.0f, 8.0f], [12.0f, 16.0f]]);
         m2 += m2;
-        assert(m2.matrix == [[4.0f, 8.0f], [12.0f, 16.0f]]);
+        assert(cast(float[2][2])m2.matrix == [[4.0f, 8.0f], [12.0f, 16.0f]]);
         m2 -= m2;
-        assert(m2.matrix == [[0.0f, 0.0f], [0.0f, 0.0f]]);
+        assert(cast(float[2][2])m2.matrix == [[0.0f, 0.0f], [0.0f, 0.0f]]);
 
-        mat3 m3 = mat3(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
-        vec3 v3 = vec3(2.0f, 2.0f, 2.0f);
-        assert((m3*2).matrix == [[2.0f, 4.0f, 6.0f], [8.0f, 10.0f, 12.0f], [14.0f, 16.0f, 18.0f]]);
+        shared mat3 m3 = shared mat3(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+        shared vec3 v3 = shared vec3(2.0f, 2.0f, 2.0f);
+        assert(cast(float[3][3])(m3*2).matrix == [[2.0f, 4.0f, 6.0f], [8.0f, 10.0f, 12.0f], [14.0f, 16.0f, 18.0f]]);
         assert((2*m3).matrix == (m3*2).matrix);
         m3 *= 2;
-        assert(m3.matrix == [[2.0f, 4.0f, 6.0f], [8.0f, 10.0f, 12.0f], [14.0f, 16.0f, 18.0f]]);
-        assert((m3*v3).vector == [24.0f, 60.0f, 96.0f]);
+        assert(cast(float[3][3])m3.matrix == [[2.0f, 4.0f, 6.0f], [8.0f, 10.0f, 12.0f], [14.0f, 16.0f, 18.0f]]);
+        assert(cast(float[3])(m3*v3).vector == [24.0f, 60.0f, 96.0f]);
         assert((v3*m3).vector == [48.0f, 60.0f, 72.0f]);
-        assert((m3*m3).matrix == [[120.0f, 144.0f, 168.0f], [264.0f, 324.0f, 384.0f], [408.0f, 504.0f, 600.0f]]);
-        assert((m3-m3).matrix == [[0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f]]);
-        assert((m3+m3).matrix == [[4.0f, 8.0f, 12.0f], [16.0f, 20.0f, 24.0f], [28.0f, 32.0f, 36.0f]]);
+        assert(cast(float[3][3])(m3*m3).matrix == [[120.0f, 144.0f, 168.0f], [264.0f, 324.0f, 384.0f], [408.0f, 504.0f, 600.0f]]);
+        assert(cast(float[3][3])(m3-m3).matrix == [[0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f]]);
+        assert(cast(float[3][3])(m3+m3).matrix == [[4.0f, 8.0f, 12.0f], [16.0f, 20.0f, 24.0f], [28.0f, 32.0f, 36.0f]]);
         m3 += m3;
-        assert(m3.matrix == [[4.0f, 8.0f, 12.0f], [16.0f, 20.0f, 24.0f], [28.0f, 32.0f, 36.0f]]);
+        assert(cast(float[3][3])m3.matrix == [[4.0f, 8.0f, 12.0f], [16.0f, 20.0f, 24.0f], [28.0f, 32.0f, 36.0f]]);
         m3 -= m3;
-        assert(m3.matrix == [[0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f]]);
+        assert(cast(float[3][3])m3.matrix == [[0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f]]);
         
         //TODO: tests for mat4, mat34
     }
@@ -1845,17 +1845,17 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
     }
     
     unittest {
-        assert(mat2(1.0f, 2.0f, 1.0f, 1.0f) == mat2(1.0f, 2.0f, 1.0f, 1.0f));
-        assert(mat2(1.0f, 2.0f, 1.0f, 1.0f) != mat2(1.0f, 1.0f, 1.0f, 1.0f));
+        assert(shared mat2(1.0f, 2.0f, 1.0f, 1.0f) == shared mat2(1.0f, 2.0f, 1.0f, 1.0f));
+        assert(shared mat2(1.0f, 2.0f, 1.0f, 1.0f) != shared mat2(1.0f, 1.0f, 1.0f, 1.0f));
                 
-        assert(mat3(1.0f) == mat3(1.0f));
-        assert(mat3(1.0f) != mat3(2.0f));
+        assert(shared mat3(1.0f) == shared mat3(1.0f));
+        assert(shared mat3(1.0f) != shared mat3(2.0f));
                 
-        assert(mat4(1.0f) == mat4(1.0f));
-        assert(mat4(1.0f) != mat4(2.0f));
+        assert(shared mat4(1.0f) == shared mat4(1.0f));
+        assert(shared mat4(1.0f) != shared mat4(2.0f));
     
-        assert(!(mat4(float.nan)));
-        if(mat4(1.0f)) { }
+        assert(!(shared mat4(float.nan)));
+        if((shared mat4(1.0f))) { }
         else { assert(false); }
     }
     
@@ -1952,8 +1952,8 @@ shared struct Quaternion(type) {
     deprecated("Use isFinite instead of ok") alias ok = isFinite;
        
     unittest {
-        quat q1 = quat(0.0f, 0.0f, 0.0f, 1.0f);
-        assert(q1.quaternion == [0.0f, 0.0f, 0.0f, 1.0f]);
+        shared quat q1 = shared quat(0.0f, 0.0f, 0.0f, 1.0f);
+        assert(cast(float[4])q1.quaternion == [0.0f, 0.0f, 0.0f, 1.0f]);
         assert(q1.quaternion == quat(0.0f, 0.0f, 0.0f, 1.0f).quaternion);
         assert(q1.quaternion == quat(0.0f, vec3(0.0f, 0.0f, 1.0f)).quaternion);
         assert(q1.quaternion == quat(vec4(0.0f, 0.0f, 0.0f, 1.0f)).quaternion);
@@ -2019,22 +2019,22 @@ shared struct Quaternion(type) {
     alias inverse conjugated; /// ditto
     
     unittest {
-        quat q1 = quat(1.0f, 1.0f, 1.0f, 1.0f);
+        shared quat q1 = shared quat(1.0f, 1.0f, 1.0f, 1.0f);
         
         assert(q1.magnitude == 2.0f);
         assert(q1.magnitude_squared == 4.0f);
-        assert(q1.magnitude == quat(0.0f, 0.0f, 2.0f, 0.0f).magnitude);
+        assert(q1.magnitude == (shared quat(0.0f, 0.0f, 2.0f, 0.0f)).magnitude);
         
-        quat q2 = quat.identity;
-        assert(q2.quaternion == [1.0f, 0.0f, 0.0f, 0.0f]);
+        shared quat q2 = quat.identity;
+        assert(cast(float[4])q2.quaternion == [1.0f, 0.0f, 0.0f, 0.0f]);
         assert(q2.x == 0.0f);
         assert(q2.y == 0.0f);
         assert(q2.z == 0.0f);
         assert(q2.w == 1.0f);
         
-        assert(q1.inverse.quaternion == [1.0f, -1.0f, -1.0f, -1.0f]);
+        assert(cast(float[4])q1.inverse.quaternion == [1.0f, -1.0f, -1.0f, -1.0f]);
         q1.invert();
-        assert(q1.quaternion == [1.0f, -1.0f, -1.0f, -1.0f]);
+        assert(cast(float[4])q1.quaternion == [1.0f, -1.0f, -1.0f, -1.0f]);
         
         q1.make_identity();
         assert(q1.quaternion == q2.quaternion);
@@ -2113,10 +2113,10 @@ shared struct Quaternion(type) {
     }
     
     unittest {
-        quat q1 = quat(4.0f, 1.0f, 2.0f, 3.0f);
+        shared quat q1 = shared quat(4.0f, 1.0f, 2.0f, 3.0f);
         
-        assert(q1.to_matrix!(3, 3).matrix == [[-25.0f, -20.0f, 22.0f], [28.0f, -19.0f, 4.0f], [-10.0f, 20.0f, -9.0f]]);
-        assert(q1.to_matrix!(4, 4).matrix == [[-25.0f, -20.0f, 22.0f, 0.0f],
+        assert(cast(float[3][3])q1.to_matrix!(3, 3).matrix == [[-25.0f, -20.0f, 22.0f], [28.0f, -19.0f, 4.0f], [-10.0f, 20.0f, -9.0f]]);
+        assert(cast(float[4][4])q1.to_matrix!(4, 4).matrix == [[-25.0f, -20.0f, 22.0f, 0.0f],
                                               [28.0f, -19.0f, 4.0f, 0.0f],
                                               [-10.0f, 20.0f, -9.0f, 0.0f],
                                               [0.0f, 0.0f, 0.0f, 1.0f]]);
@@ -2125,7 +2125,7 @@ shared struct Quaternion(type) {
 
         assert(quat(1.0f, 0.0f, 0.0f, 0.0f).quaternion == quat.from_matrix(mat3.identity).quaternion);
         
-        quat q2 = quat.from_matrix(mat3(1.0f, 3.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f));
+        shared quat q2 = quat.from_matrix(mat3(1.0f, 3.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f));
         assert(q2.x == 0.0f);
         assert(almost_equal(q2.y, 0.7071067f));
         assert(almost_equal(q2.z, -1.060660));
@@ -2162,8 +2162,8 @@ shared struct Quaternion(type) {
     }
     
     unittest {
-        quat q1 = quat(1.0f, 2.0f, 3.0f, 4.0f);
-        quat q2 = quat(1.0f, 2.0f, 3.0f, 4.0f);
+        shared quat q1 = shared quat(1.0f, 2.0f, 3.0f, 4.0f);
+        shared quat q2 = shared quat(1.0f, 2.0f, 3.0f, 4.0f);
         
         q1.normalize();
         assert(q1.quaternion == q2.normalized.quaternion);
@@ -2187,17 +2187,17 @@ shared struct Quaternion(type) {
     }
 
     unittest {
-        quat q1 = quat.identity;
+        shared quat q1 = quat.identity;
         assert(q1.pitch == 0.0f);
         assert(q1.yaw == 0.0f);
         assert(q1.roll == 0.0f);
         
-        quat q2 = quat(1.0f, 1.0f, 1.0f, 1.0f);
+        shared quat q2 = shared quat(1.0f, 1.0f, 1.0f, 1.0f);
         assert(almost_equal(q2.yaw, q2.roll));
         assert(almost_equal(q2.yaw, 1.570796f));
         assert(q2.pitch == 0.0f);
         
-        quat q3 = quat(0.1f, 1.9f, 2.1f, 1.3f);
+        shared quat q3 = shared quat(0.1f, 1.9f, 2.1f, 1.3f);
         assert(almost_equal(q3.yaw, 2.4382f));
         assert(isNaN(q3.pitch));
         assert(almost_equal(q3.roll, 1.67719f));
@@ -2310,21 +2310,21 @@ shared struct Quaternion(type) {
     }
     
     unittest {
-        assert(quat.xrotation(PI).quaternion[1..4] == [1.0f, 0.0f, 0.0f]);
-        assert(quat.yrotation(PI).quaternion[1..4] == [0.0f, 1.0f, 0.0f]);
-        assert(quat.zrotation(PI).quaternion[1..4] == [0.0f, 0.0f, 1.0f]);
+        assert(cast(float[4])quat.xrotation(PI).quaternion[1..4] == [1.0f, 0.0f, 0.0f]);
+        assert(cast(float[4])quat.yrotation(PI).quaternion[1..4] == [0.0f, 1.0f, 0.0f]);
+        assert(cast(float[4])quat.zrotation(PI).quaternion[1..4] == [0.0f, 0.0f, 1.0f]);
         assert((quat.xrotation(PI).w == quat.yrotation(PI).w) && (quat.yrotation(PI).w == quat.zrotation(PI).w));
         //assert(quat.rotatex(PI).w == to!(quat.qt)(cos(PI)));
         assert(quat.xrotation(PI).quaternion == quat.identity.rotatex(PI).quaternion);
         assert(quat.yrotation(PI).quaternion == quat.identity.rotatey(PI).quaternion);
         assert(quat.zrotation(PI).quaternion == quat.identity.rotatez(PI).quaternion);
         
-        assert(quat.axis_rotation(PI, vec3(1.0f, 1.0f, 1.0f)).quaternion[1..4] == [1.0f, 1.0f, 1.0f]);
+        assert(cast(float[4])quat.axis_rotation(PI, vec3(1.0f, 1.0f, 1.0f)).quaternion[1..4] == [1.0f, 1.0f, 1.0f]);
         assert(quat.axis_rotation(PI, vec3(1.0f, 1.0f, 1.0f)).w == quat.xrotation(PI).w);
         assert(quat.axis_rotation(PI, vec3(1.0f, 1.0f, 1.0f)).quaternion ==
                quat.identity.rotate_axis(PI, vec3(1.0f, 1.0f, 1.0f)).quaternion);
         
-        quat q1 = quat.euler_rotation(PI, PI, PI);
+        shared quat q1 = quat.euler_rotation(PI, PI, PI);
         assert((q1.x > -1e-16) && (q1.x < 1e-16));
         assert((q1.y > -1e-16) && (q1.y < 1e-16));
         assert((q1.z > -1e-16) && (q1.z < 1e-16));
@@ -2384,11 +2384,11 @@ shared struct Quaternion(type) {
        return ret;        
     }
     
-    Quaternion opBinary(string op : "*")(qt inp) const {
-        return Quaternion(w*inp, x*inp, y*inp, z*inp);
+    shared(Quaternion) opBinary(string op : "*")(qt inp) const {
+        return shared Quaternion(w*inp, x*inp, y*inp, z*inp);
     }
     
-    void opOpAssign(string op : "*")(Quaternion inp) {
+    void opOpAssign(string op : "*")(shared Quaternion inp) {
         qt w2 = -x * inp.x - y * inp.y - z * inp.z + w * inp.w;
         qt x2 = x * inp.w + y * inp.z - z * inp.y + w * inp.x;
         qt y2 = -x * inp.z + y * inp.w + z * inp.x + w * inp.y;
@@ -2396,7 +2396,7 @@ shared struct Quaternion(type) {
         w = w2; x = x2; y = y2; z = z2;
     }
 
-    void opOpAssign(string op)(Quaternion inp) if((op == "+") || (op == "-")) {
+    void opOpAssign(string op)(shared Quaternion inp) if((op == "+") || (op == "-")) {
         mixin("w = w" ~ op ~ "inp.w;");
         mixin("x = x" ~ op ~ "inp.x;");
         mixin("y = y" ~ op ~ "inp.y;");
@@ -2411,14 +2411,14 @@ shared struct Quaternion(type) {
     }
     
     unittest {
-        quat q1 = quat.identity;
-        quat q2 = quat(3.0f, 0.0f, 1.0f, 2.0f);
-        quat q3 = quat(3.4f, 0.1f, 1.2f, 2.3f);
+        shared quat q1 = quat.identity;
+        shared quat q2 = shared quat(3.0f, 0.0f, 1.0f, 2.0f);
+        shared quat q3 = shared quat(3.4f, 0.1f, 1.2f, 2.3f);
         
         assert((q1 * q1).quaternion == q1.quaternion);
         assert((q1 * q2).quaternion == q2.quaternion);
         assert((q2 * q1).quaternion == q2.quaternion);
-        quat q4 = q3 * q2;
+        shared quat q4 = q3 * q2;
         assert((q2 * q3).quaternion != q4.quaternion);
         q3 *= q2;
         assert(q4.quaternion == q3.quaternion);
@@ -2427,28 +2427,28 @@ shared struct Quaternion(type) {
         assert(almost_equal(q4.z, 13.8f));
         assert(almost_equal(q4.w, 4.4f));
 
-        quat q5 = quat(1.0f, 2.0f, 3.0f, 4.0f);
-        quat q6 = quat(3.0f, 1.0f, 6.0f, 2.0f);
+        shared quat q5 = shared quat(1.0f, 2.0f, 3.0f, 4.0f);
+        shared quat q6 = shared quat(3.0f, 1.0f, 6.0f, 2.0f);
         
-        assert((q5 - q6).quaternion == [-2.0f, 1.0f, -3.0f, 2.0f]);
-        assert((q5 + q6).quaternion == [4.0f, 3.0f, 9.0f, 6.0f]);        
-        assert((q6 - q5).quaternion == [2.0f, -1.0f, 3.0f, -2.0f]);
-        assert((q6 + q5).quaternion == [4.0f, 3.0f, 9.0f, 6.0f]);
+        assert(cast(float[4])(q5 - q6).quaternion == [-2.0f, 1.0f, -3.0f, 2.0f]);
+        assert(cast(float[4])(q5 + q6).quaternion == [4.0f, 3.0f, 9.0f, 6.0f]);        
+        assert(cast(float[4])(q6 - q5).quaternion == [2.0f, -1.0f, 3.0f, -2.0f]);
+        assert(cast(float[4])(q6 + q5).quaternion == [4.0f, 3.0f, 9.0f, 6.0f]);
         q5 += q6;
-        assert(q5.quaternion == [4.0f, 3.0f, 9.0f, 6.0f]);
+        assert(cast(float[4])q5.quaternion == [4.0f, 3.0f, 9.0f, 6.0f]);
         q6 -= q6;
-        assert(q6.quaternion == [0.0f, 0.0f, 0.0f, 0.0f]);
+        assert(cast(float[4])q6.quaternion == [0.0f, 0.0f, 0.0f, 0.0f]);
         
-        quat q7 = quat(2.0f, 2.0f, 2.0f, 2.0f);
-        assert((q7 * 2).quaternion == [4.0f, 4.0f, 4.0f, 4.0f]);
+        shared quat q7 = shared quat(2.0f, 2.0f, 2.0f, 2.0f);
+        assert(cast(float[4])(q7 * 2).quaternion == [4.0f, 4.0f, 4.0f, 4.0f]);
         assert((2 * q7).quaternion == (q7 * 2).quaternion);
         q7 *= 2;
-        assert(q7.quaternion == [4.0f, 4.0f, 4.0f, 4.0f]);
+        assert(cast(float[4])q7.quaternion == [4.0f, 4.0f, 4.0f, 4.0f]);
         
-        vec3 v1 = vec3(1.0f, 2.0f, 3.0f);
+        shared vec3 v1 = shared vec3(1.0f, 2.0f, 3.0f);
         assert((q1 * v1).vector == v1.vector);
         assert((v1 * q1).vector == (q1 * v1).vector);
-        assert((q2 * v1).vector == [-2.0f, 36.0f, 38.0f]);
+        assert(cast(float[3])(q2 * v1).vector == [-2.0f, 36.0f, 38.0f]);
     }
 
     const int opCmp(ref const shared Quaternion qua) const {
@@ -2473,11 +2473,11 @@ shared struct Quaternion(type) {
     }
     
     unittest {
-        assert(quat(1.0f, 2.0f, 3.0f, 4.0f) == quat(1.0f, 2.0f, 3.0f, 4.0f));
-        assert(quat(1.0f, 2.0f, 3.0f, 4.0f) != quat(1.0f, 2.0f, 3.0f, 3.0f));
+        assert(shared quat(1.0f, 2.0f, 3.0f, 4.0f) == shared quat(1.0f, 2.0f, 3.0f, 4.0f));
+        assert(shared quat(1.0f, 2.0f, 3.0f, 4.0f) != shared quat(1.0f, 2.0f, 3.0f, 3.0f));
     
-        assert(!(quat(float.nan, float.nan, float.nan, float.nan)));
-        if(quat(1.0f, 1.0f, 1.0f, 1.0f)) { }
+        assert(!(shared quat(float.nan, float.nan, float.nan, float.nan)));
+        if((shared quat(1.0f, 1.0f, 1.0f, 1.0f))) { }
         else { assert(false); }
     }
     
