@@ -1,7 +1,7 @@
-Gl3n
+Gl3n Shared
 ====
 
-gl3n provides all the math you need to work with OpenGL. Currently gl3n supports:
+gl3n-shared provides all the math you need to work with OpenGL. All structs are marked as shared, and you should only use them as such! Currently gl3n supports:
 
 * linear algebra
   * vectors
