@@ -17,7 +17,7 @@ enum {
 }
 
 ///
-struct Frustum {
+shared struct Frustum {
     enum {
         LEFT, /// Used to access the planes array.
         RIGHT, /// ditto
@@ -31,17 +31,17 @@ struct Frustum {
 
     @safe pure nothrow:
 
-    @property ref Plane left() { return planes[LEFT]; }
-    @property ref Plane right() { return planes[RIGHT]; }
-    @property ref Plane bottom() { return planes[BOTTOM]; }
-    @property ref Plane top() { return planes[TOP]; }
-    @property ref Plane near() { return planes[NEAR]; }
-    @property ref Plane far() { return planes[FAR]; }
+    @property ref shared(Plane) left() { return planes[LEFT]; }
+    @property ref shared(Plane) right() { return planes[RIGHT]; }
+    @property ref shared(Plane) bottom() { return planes[BOTTOM]; }
+    @property ref shared(Plane) top() { return planes[TOP]; }
+    @property ref shared(Plane) near() { return planes[NEAR]; }
+    @property ref shared(Plane) far() { return planes[FAR]; }
 
     /// Constructs the frustum from a model-view-projection matrix.
     /// Params:
     /// mvp = a model-view-projection matrix
-    this(mat4 mvp) {
+    this(shared mat4 mvp) {
         mvp.transpose(); // we store the matrix row-major
         
         planes = [
@@ -98,9 +98,9 @@ struct Frustum {
 
     /// Checks if the $(I aabb) intersects with the frustum.
     /// Returns OUTSIDE (= 0), INSIDE (= 1) or INTERSECT (= 2).
-    int intersects(AABB aabb) {
-        vec3 hextent = aabb.half_extent;
-        vec3 center = aabb.center;
+    int intersects(shared AABB aabb) {
+        shared vec3 hextent = aabb.half_extent;
+        shared vec3 center = aabb.center;
 
         int result = INSIDE;
         foreach(plane; planes) {
@@ -120,7 +120,7 @@ struct Frustum {
     }
 
     /// Returns true if the $(I aabb) intersects with the frustum or is inside it.
-    bool opBinaryRight(string s : "in")(AABB aabb) {
+    bool opBinaryRight(string s : "in")(shared AABB aabb) {
         return intersects(aabb) > 0;
     }
 }

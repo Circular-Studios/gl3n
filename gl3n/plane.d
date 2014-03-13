@@ -11,7 +11,7 @@ private {
 /// Base template for all plane-types.
 /// Params:
 /// type = all values get stored as this type (must be floating point)
-struct PlaneT(type = float) if(isFloatingPoint!type) {
+shared struct PlaneT(type = float) if(isFloatingPoint!type) {
     alias type pt; /// Holds the internal type of the plane.
     alias Vector!(pt, 3) vec3; /// Convenience alias to the corresponding vector type.
 
@@ -39,7 +39,7 @@ struct PlaneT(type = float) if(isFloatingPoint!type) {
     }
 
     /// ditto
-    this(vec3 normal, pt d) {
+    this(shared vec3 normal, pt d) {
         this.normal = normal;
         this.d = d;
     }
@@ -65,15 +65,15 @@ struct PlaneT(type = float) if(isFloatingPoint!type) {
     }
 
     /// Returns a normalized copy of the plane.
-    @property PlaneT normalized() const {
-        PlaneT ret = PlaneT(a, b, c, d);
+    @property shared PlaneT normalized() const {
+        shared PlaneT ret = shared PlaneT(a, b, c, d);
         ret.normalize();
         return ret;
     }
 
     unittest {
-        Plane p = Plane(0.0f, 1.0f, 2.0f, 3.0f);
-        Plane pn = p.normalized();
+        shared Plane p = shared Plane(0.0f, 1.0f, 2.0f, 3.0f);
+        shared Plane pn = p.normalized();
         assert(pn.normal == vec3(0.0f, 1.0f, 2.0f).normalized);
         assert(almost_equal(pn.d, 3.0f/vec3(0.0f, 1.0f, 2.0f).length));
         p.normalize();
@@ -82,24 +82,24 @@ struct PlaneT(type = float) if(isFloatingPoint!type) {
 
     /// Returns the distance from a point to the plane.
     /// Note: the plane $(RED must) be normalized, the result can be negative.
-    pt distance(vec3 point) const {
+    pt distance(shared vec3 point) const {
         return dot(point, normal) + d;
     }
 
     /// Returns the distance from a point to the plane.
     /// Note: the plane does not have to be normalized, the result can be negative.
-    pt ndistance(vec3 point) const {
+    pt ndistance(shared vec3 point) const {
         return (dot(point, normal) + d) / normal.length;
     }
 
     unittest {
-        Plane p = Plane(-1.0f, 4.0f, 19.0f, -10.0f);
+        shared Plane p = shared Plane(-1.0f, 4.0f, 19.0f, -10.0f);
         assert(almost_equal(p.ndistance(vec3(5.0f, -2.0f, 0.0f)), -1.182992));
         assert(almost_equal(p.ndistance(vec3(5.0f, -2.0f, 0.0f)),
                             p.normalized.distance(vec3(5.0f, -2.0f, 0.0f))));
     }
 
-    bool opEquals(PlaneT other) const {
+    bool opEquals(shared PlaneT other) const {
         return other.normal == normal && other.d == d;
     }
 

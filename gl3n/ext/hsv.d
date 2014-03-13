@@ -13,8 +13,8 @@ private {
 
 /// Converts a 3 dimensional color-vector from the RGB to the HSV colorspace.
 /// The function assumes that each component is in the range [0, 1].
-@safe pure nothrow vec3 rgb2hsv(vec3 inp) {
-    vec3 ret = vec3(0.0f, 0.0f, 0.0f);
+@safe pure nothrow shared(vec3) rgb2hsv(shared vec3 inp) {
+    shared vec3 ret = shared vec3(0.0f, 0.0f, 0.0f);
     
     float h_max = max(inp.r, inp.g, inp.b);
     float h_min = min(inp.r, inp.g, inp.b);
@@ -52,8 +52,8 @@ private {
 
 /// Converts a 4 dimensional color-vector from the RGB to the HSV colorspace.
 /// The alpha value is not touched. This function also assumes that each component is in the range [0, 1].
-@safe pure nothrow vec4 rgb2hsv(vec4 inp) {
-    return vec4(rgb2hsv(vec3(inp.rgb)), inp.a);
+@safe pure nothrow shared(vec4) rgb2hsv(shared vec4 inp) {
+    return shared vec4(rgb2hsv(shared vec3(inp.rgb)), inp.a);
 }
 
 unittest {
@@ -70,9 +70,9 @@ unittest {
 /// RGB colors will be in the range [0, 1].
 /// This function is not marked es pure, since it depends on std.math.floor, which
 /// is also not pure.
-@safe nothrow vec3 hsv2rgb(vec3 inp) {
+@safe nothrow shared(vec3) hsv2rgb(shared vec3 inp) {
     if(inp.y == 0.0f) { // s
-        return vec3(inp.zzz); // v
+        return shared vec3(inp.zzz); // v
     } else {
         float var_h = inp.x * 6;
         float var_i = to!float(floor(var_h));
@@ -80,19 +80,19 @@ unittest {
         float var_2 = inp.z * (1 - inp.y * (var_h - var_i));
         float var_3 = inp.z * (1 - inp.y * (1 - (var_h - var_i)));
 
-        if(var_i == 0.0f)      return vec3(inp.z, var_3, var_1);
-        else if(var_i == 1.0f) return vec3(var_2, inp.z, var_1);
-        else if(var_i == 2.0f) return vec3(var_1, inp.z, var_3);
-        else if(var_i == 3.0f) return vec3(var_1, var_2, inp.z);
-        else if(var_i == 4.0f) return vec3(var_3, var_1, inp.z);
-        else                   return vec3(inp.z, var_1, var_2);
+        if(var_i == 0.0f)      return shared vec3(inp.z, var_3, var_1);
+        else if(var_i == 1.0f) return shared vec3(var_2, inp.z, var_1);
+        else if(var_i == 2.0f) return shared vec3(var_1, inp.z, var_3);
+        else if(var_i == 3.0f) return shared vec3(var_1, var_2, inp.z);
+        else if(var_i == 4.0f) return shared vec3(var_3, var_1, inp.z);
+        else                   return shared vec3(inp.z, var_1, var_2);
     }
 }
 
 /// Converts a 4 dimensional color-vector from the HSV to the RGB colorspace.
 /// The alpha value is not touched and the resulting RGB colors will be in the range [0, 1].
-@safe nothrow vec4 hsv2rgb(vec4 inp) {
-    return vec4(hsv2rgb(vec3(inp.xyz)), inp.w);
+@safe nothrow shared(vec4) hsv2rgb(shared vec4 inp) {
+    return shared vec4(hsv2rgb(shared vec3(inp.xyz)), inp.w);
 }
 
 unittest {

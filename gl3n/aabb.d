@@ -9,7 +9,7 @@ private {
 /// Base template for all AABB-types.
 /// Params:
 /// type = all values get stored as this type
-struct AABBT(type) {
+shared struct AABBT(type) {
     alias type at; /// Holds the internal type of the AABB.
     alias Vector!(at, 3) vec3; /// Convenience alias to the corresponding vector type.
 
@@ -29,7 +29,7 @@ struct AABBT(type) {
 
     /// Constructs the AABB around N points (all points will be part of the AABB).
     static AABBT from_points(vec3[] points) {
-        AABBT res;
+        shared AABBT res;
 
         if(points.length == 0) {
             return res;
@@ -69,7 +69,7 @@ struct AABBT(type) {
     }
 
     /// Expands the AABB, so that $(I v) is part of the AABB.
-    void expand(vec3 v) {
+    void expand(shared vec3 v) {
         if (v.x > max.x) max.x = v.x;
         if (v.y > max.y) max.y = v.y;
         if (v.z > max.z) max.z = v.z;
@@ -113,29 +113,29 @@ struct AABBT(type) {
     }
 
     /// Returns the extent of the AABB (also sometimes called size).
-    @property vec3 extent() const {
+    @property shared(vec3) extent() const {
         return max - min;
     }
 
     /// Returns the half extent.
-    @property vec3 half_extent() const {
-        return 0.5 * (max - min);
+    @property shared(vec3) half_extent() const {
+        return 0.5 * shared vec3(max - min);
     }
 
     unittest {
-        AABB a = AABB(vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f));
-        assert(a.extent == vec3(1.0f, 1.0f, 1.0f));
+        shared AABB a = shared AABB(vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f));
+        assert(a.extent == shared vec3(1.0f, 1.0f, 1.0f));
         assert(a.half_extent == 0.5 * a.extent);
 
-        AABB b = AABB(vec3(0.2f, 0.2f, 0.2f), vec3(1.0f, 1.0f, 1.0f));
-        assert(b.extent == vec3(0.8f, 0.8f, 0.8f));
+        AABB b = shared AABB(shared vec3(0.2f, 0.2f, 0.2f), shared vec3(1.0f, 1.0f, 1.0f));
+        assert(b.extent == shared vec3(0.8f, 0.8f, 0.8f));
         assert(b.half_extent == 0.5 * b.extent);
         
     }
 
     /// Returns the area of the AABB.
     @property at area() const {
-        vec3 e = extent;
+        shared vec3 e = extent;
         return 2.0 * (e.x * e.y + e.x * e.z + e.y * e.z);
     }
 
@@ -152,7 +152,7 @@ struct AABBT(type) {
 
     /// Returns the center of the AABB.
     @property vec3 center() const {
-        return 0.5 * (max + min);
+        return 0.5 * shared vec3(max + min);
     }
 
     unittest {

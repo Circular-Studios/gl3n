@@ -50,11 +50,11 @@ alias interp_spherical slerp; /// ditto
 
 
 /// Normalized quaternion linear interpolation.
-quat nlerp(quat a, quat b, float t) {
+shared(quat) nlerp(shared quat a, shared quat b, float t) {
     // TODO: tests
     float dot = a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
 
-    quat result;
+    shared quat result;
     if(dot < 0) { // Determine the "shortest route"...
         result = a - (b + a) * t; // use -b instead of b
     } else {
