@@ -1,5 +1,5 @@
 {
-    "name": "gl3n",
+    "name": "gl3n-shared",
     "description": "OpenGL Maths for D (not glm for D but better).",
     "homepage": "http://dav1dde.github.com/gl3n/",
     "copyright": "Copyright © 2011-2013, David Herberth",
