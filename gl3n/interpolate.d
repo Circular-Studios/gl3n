@@ -73,13 +73,13 @@ unittest {
     shared vec4 v4_1 = shared vec4(1.0f);
     shared vec4 v4_2 = shared vec4(0.0f);
     
-    assert(interp(v2_1, v2_2, 0.5f).vector == [0.5f, 0.5f]);
+    assert(cast(float[2])interp(v2_1, v2_2, 0.5f).vector == [0.5f, 0.5f]);
     assert(interp(v2_1, v2_2, 0.0f) == v2_1);
     assert(interp(v2_1, v2_2, 1.0f) == v2_2);
-    assert(interp(v3_1, v3_2, 0.5f).vector == [0.5f, 0.5f, 0.5f]);
+    assert(cast(float[3])interp(v3_1, v3_2, 0.5f).vector == [0.5f, 0.5f, 0.5f]);
     assert(interp(v3_1, v3_2, 0.0f) == v3_1);
     assert(interp(v3_1, v3_2, 1.0f) == v3_2);
-    assert(interp(v4_1, v4_2, 0.5f).vector == [0.5f, 0.5f, 0.5f, 0.5f]);
+    assert(cast(float[4])interp(v4_1, v4_2, 0.5f).vector == [0.5f, 0.5f, 0.5f, 0.5f]);
     assert(interp(v4_1, v4_2, 0.0f) == v4_1);
     assert(interp(v4_1, v4_2, 1.0f) == v4_2);
 
@@ -101,7 +101,7 @@ unittest {
     shared quat q2 = shared quat(0.0f, 0.0f, 0.0f, 0.0f);
     
     assert(interp(q1, q2, 0.0f).quaternion == q1.quaternion);
-    assert(interp(q1, q2, 0.5f).quaternion == [0.5f, 0.5f, 0.5f, 0.5f]);
+    assert(cast(float[4])interp(q1, q2, 0.5f).quaternion == [0.5f, 0.5f, 0.5f, 0.5f]);
     assert(interp(q1, q2, 1.0f).quaternion == q2.quaternion);
     
     assert(interp_spherical(v2_1, v2_2, 0.0).vector == v2_1.vector);

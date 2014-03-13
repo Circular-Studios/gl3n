@@ -6,7 +6,7 @@ private {
 
 
 /// A matrix stack similiar to OpenGLs glPushMatrix/glPopMatrix
-struct MatrixStack(T) if(is_matrix!T) {
+shared struct MatrixStack(T) if(is_matrix!T) {
     alias T Matrix; /// Holds the internal matrix type
 
     Matrix top = Matrix.identity; /// The top matrix, the one you work with
@@ -25,7 +25,7 @@ struct MatrixStack(T) if(is_matrix!T) {
     }
 
     /// Sets the top matrix
-    void set(Matrix matrix) pure nothrow {
+    void set(shared Matrix matrix) pure nothrow {
         top = matrix;
     }
 
@@ -39,14 +39,14 @@ struct MatrixStack(T) if(is_matrix!T) {
     }
 
     /// Pushes the top matrix on the stack and sets $(B matrix) as the new top matrix.
-    void push(Matrix matrix) pure nothrow {
+    void push(shared Matrix matrix) pure nothrow {
         push();
         top = matrix;
     }
 
     /// Pops a matrix from the stack and sets it as top matrix.
     /// Also returns a reference to the new top matrix.
-    ref Matrix pop() pure nothrow
+    ref shared(Matrix) pop() pure nothrow
         in { assert(_top_pos >= 1, "popped too often from matrix stack"); }
         body {
             top = stack[--_top_pos];
@@ -57,7 +57,7 @@ struct MatrixStack(T) if(is_matrix!T) {
 unittest {
     import gl3n.linalg : mat4;
 
-    auto ms = MatrixStack!mat4();
+    auto ms = shared MatrixStack!mat4();
 
     // just a few tests to make sure it forwards correctly to Matrix
     static assert(__traits(hasMember, ms, "make_identity"));
@@ -91,7 +91,7 @@ unittest {
     assert(ms.top == mat4.identity);
 
     ms.pop();
-    assert(ms.top == mat4(m1).translate(0, 3, 2));
+    assert(ms.top == (shared mat4(m1)).translate(0, 3, 2));
 
     ms.pop();
     assert(ms.top == m1);
