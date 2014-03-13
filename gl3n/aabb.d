@@ -45,17 +45,17 @@ shared struct AABBT(type) {
     }
 
     unittest {
-        AABB a = AABB(vec3(0.0f, 1.0f, 2.0f), vec3(1.0f, 2.0f, 3.0f));
-        assert(a.min == vec3(0.0f, 1.0f, 2.0f));
-        assert(a.max == vec3(1.0f, 2.0f, 3.0f));
+        shared AABB a = shared AABB(shared vec3(0.0f, 1.0f, 2.0f), shared vec3(1.0f, 2.0f, 3.0f));
+        assert(a.min == shared vec3(0.0f, 1.0f, 2.0f));
+        assert(a.max == shared vec3(1.0f, 2.0f, 3.0f));
 
-        a = AABB.from_points([vec3(0.0f, 0.0f, 0.0f), vec3(-1.0f, 2.0f, 3.0f), vec3(0.0f, 0.0f, 4.0f)]);
-        assert(a.min == vec3(-1.0f, 0.0f, 0.0f));
-        assert(a.max == vec3(0.0f, 2.0f, 4.0f));
+        a = shared AABB.from_points([shared vec3(0.0f, 0.0f, 0.0f), shared vec3(-1.0f, 2.0f, 3.0f), shared vec3(0.0f, 0.0f, 4.0f)]);
+        assert(a.min == shared vec3(-1.0f, 0.0f, 0.0f));
+        assert(a.max == shared vec3(0.0f, 2.0f, 4.0f));
         
-        a = AABB.from_points([vec3(1.0f, 1.0f, 1.0f), vec3(2.0f, 2.0f, 2.0f)]);
-        assert(a.min == vec3(1.0f, 1.0f, 1.0f));
-        assert(a.max == vec3(2.0f, 2.0f, 2.0f));
+        a = shared AABB.from_points([shared vec3(1.0f, 1.0f, 1.0f), shared vec3(2.0f, 2.0f, 2.0f)]);
+        assert(a.min == shared vec3(1.0f, 1.0f, 1.0f));
+        assert(a.max == shared vec3(2.0f, 2.0f, 2.0f));
     }
 
     /// Expands the AABB by another AABB. 
@@ -79,18 +79,18 @@ shared struct AABBT(type) {
     }
 
     unittest {
-        AABB a = AABB(vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 4.0f, 1.0f));
-        AABB b = AABB(vec3(2.0f, -1.0f, 2.0f), vec3(3.0f, 3.0f, 3.0f));
+        shared AABB a = shared AABB(shared vec3(0.0f, 0.0f, 0.0f), shared vec3(1.0f, 4.0f, 1.0f));
+        shared AABB b = shared AABB(shared vec3(2.0f, -1.0f, 2.0f), shared vec3(3.0f, 3.0f, 3.0f));
 
-        AABB c;
+        shared AABB c;
         c.expand(a);
         c.expand(b);
-        assert(c.min == vec3(0.0f, -1.0f, 0.0f));
-        assert(c.max == vec3(3.0f, 4.0f, 3.0f));
+        assert(c.min == shared vec3(0.0f, -1.0f, 0.0f));
+        assert(c.max == shared vec3(3.0f, 4.0f, 3.0f));
 
-        c.expand(vec3(12.0f, -12.0f, 0.0f));
-        assert(c.min == vec3(0.0f, -12.0f, 0.0f));
-        assert(c.max == vec3(12.0f, 4.0f, 3.0f));
+        c.expand(shared vec3(12.0f, -12.0f, 0.0f));
+        assert(c.min == shared vec3(0.0f, -12.0f, 0.0f));
+        assert(c.max == shared vec3(12.0f, 4.0f, 3.0f));
     }
 
     /// Returns true if the AABBs intersect.
@@ -102,14 +102,14 @@ shared struct AABBT(type) {
     }
 
     unittest {
-        assert(AABB(vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)).intersects(
-               AABB(vec3(0.5f, 0.5f, 0.5f), vec3(3.0f, 3.0f, 3.0f))));
+        assert((shared AABB(shared vec3(0.0f, 0.0f, 0.0f), shared vec3(1.0f, 1.0f, 1.0f))).intersects(
+               shared AABB(shared vec3(0.5f, 0.5f, 0.5f), shared vec3(3.0f, 3.0f, 3.0f))));
 
-        assert(AABB(vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)).intersects(
-               AABB(vec3(0.5f, 0.5f, 0.5f), vec3(0.7f, 0.7f, 0.7f))));
+        assert((shared AABB(shared vec3(0.0f, 0.0f, 0.0f), shared vec3(1.0f, 1.0f, 1.0f))).intersects(
+               shared AABB(shared vec3(0.5f, 0.5f, 0.5f), shared vec3(0.7f, 0.7f, 0.7f))));
 
-        assert(!AABB(vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)).intersects(
-                AABB(vec3(1.5f, 1.5f, 1.5f), vec3(3.0f, 3.0f, 3.0f))));
+        assert(!(shared AABB(shared vec3(0.0f, 0.0f, 0.0f), shared vec3(1.0f, 1.0f, 1.0f))).intersects(
+                shared AABB(shared vec3(1.5f, 1.5f, 1.5f), shared vec3(3.0f, 3.0f, 3.0f))));
     }
 
     /// Returns the extent of the AABB (also sometimes called size).
@@ -123,11 +123,11 @@ shared struct AABBT(type) {
     }
 
     unittest {
-        shared AABB a = shared AABB(vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f));
+        shared AABB a = shared AABB(shared vec3(0.0f, 0.0f, 0.0f), shared vec3(1.0f, 1.0f, 1.0f));
         assert(a.extent == shared vec3(1.0f, 1.0f, 1.0f));
         assert(a.half_extent == 0.5 * a.extent);
 
-        AABB b = shared AABB(shared vec3(0.2f, 0.2f, 0.2f), shared vec3(1.0f, 1.0f, 1.0f));
+        shared AABB b = shared AABB(shared vec3(0.2f, 0.2f, 0.2f), shared vec3(1.0f, 1.0f, 1.0f));
         assert(b.extent == shared vec3(0.8f, 0.8f, 0.8f));
         assert(b.half_extent == 0.5 * b.extent);
         
@@ -140,13 +140,13 @@ shared struct AABBT(type) {
     }
 
     unittest {
-        AABB a = AABB(vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f));
+        shared AABB a = shared AABB(shared vec3(0.0f, 0.0f, 0.0f), shared vec3(1.0f, 1.0f, 1.0f));
         assert(a.area == 6);
 
-        AABB b = AABB(vec3(0.2f, 0.2f, 0.2f), vec3(1.0f, 1.0f, 1.0f));
+        shared AABB b = shared AABB(shared vec3(0.2f, 0.2f, 0.2f), shared vec3(1.0f, 1.0f, 1.0f));
         assert(almost_equal(b.area, 3.84f));
 
-        AABB c = AABB(vec3(0.2f, 0.4f, 0.6f), vec3(1.0f, 1.0f, 1.0f));
+        shared AABB c = shared AABB(shared vec3(0.2f, 0.4f, 0.6f), shared vec3(1.0f, 1.0f, 1.0f));
         assert(almost_equal(c.area, 2.08f));
     }
 
@@ -156,8 +156,8 @@ shared struct AABBT(type) {
     }
 
     unittest {
-        AABB a = AABB(vec3(0.5f, 0.5f, 0.5f), vec3(1.0f, 1.0f, 1.0f));
-        assert(a.center == vec3(0.75f, 0.75f, 0.75f));
+        shared AABB a = shared AABB(shared vec3(0.5f, 0.5f, 0.5f), shared vec3(1.0f, 1.0f, 1.0f));
+        assert(a.center == shared vec3(0.75f, 0.75f, 0.75f));
     }
 
     /// Returns all vertices of the AABB, basically one vec3 per corner.
@@ -179,8 +179,8 @@ shared struct AABBT(type) {
     }
 
     unittest {
-        assert(AABB(vec3(1.0f, 12.0f, 14.0f), vec3(33.0f, 222.0f, 342.0f)) ==
-               AABB(vec3(1.0f, 12.0f, 14.0f), vec3(33.0f, 222.0f, 342.0f)));
+        assert(shared AABB(shared vec3(1.0f, 12.0f, 14.0f), shared vec3(33.0f, 222.0f, 342.0f)) ==
+               shared AABB(shared vec3(1.0f, 12.0f, 14.0f), shared vec3(33.0f, 222.0f, 342.0f)));
     }
 }
 

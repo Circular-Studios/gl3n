@@ -18,7 +18,7 @@ private {
 @safe pure nothrow:
 
 /// Interpolates linear between two points, also known as lerp.
-T interp(T)(T a, T b, float t) {
+shared(T) interp(T)(T a, T b, float t) {
     return a * (1 - t) + b * t;
 }
 alias interp interp_linear; /// ditto
@@ -66,12 +66,12 @@ shared(quat) nlerp(shared quat a, shared quat b, float t) {
 }
 
 unittest {
-    vec2 v2_1 = vec2(1.0f);
-    vec2 v2_2 = vec2(0.0f);
-    vec3 v3_1 = vec3(1.0f);
-    vec3 v3_2 = vec3(0.0f);
-    vec4 v4_1 = vec4(1.0f);
-    vec4 v4_2 = vec4(0.0f);
+    shared vec2 v2_1 = shared vec2(1.0f);
+    shared vec2 v2_2 = shared vec2(0.0f);
+    shared vec3 v3_1 = shared vec3(1.0f);
+    shared vec3 v3_2 = shared vec3(0.0f);
+    shared vec4 v4_1 = shared vec4(1.0f);
+    shared vec4 v4_2 = shared vec4(0.0f);
     
     assert(interp(v2_1, v2_2, 0.5f).vector == [0.5f, 0.5f]);
     assert(interp(v2_1, v2_2, 0.0f) == v2_1);
@@ -97,8 +97,8 @@ unittest {
     assert(interp(0.0f, 1.0f, 0.0f) == 0.0f);
     assert(interp(0.0f, 1.0f, 1.0f) == 1.0f);
     
-    quat q1 = quat(1.0f, 1.0f, 1.0f, 1.0f);
-    quat q2 = quat(0.0f, 0.0f, 0.0f, 0.0f);
+    shared quat q1 = shared quat(1.0f, 1.0f, 1.0f, 1.0f);
+    shared quat q2 = shared quat(0.0f, 0.0f, 0.0f, 0.0f);
     
     assert(interp(q1, q2, 0.0f).quaternion == q1.quaternion);
     assert(interp(q1, q2, 0.5f).quaternion == [0.5f, 0.5f, 0.5f, 0.5f]);

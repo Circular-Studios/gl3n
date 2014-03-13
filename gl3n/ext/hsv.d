@@ -57,13 +57,13 @@ private {
 }
 
 unittest {
-    assert(rgb2hsv(vec3(0.0f, 0.0f, 0.0f)) == vec3(0.0f, 0.0f, 0.0f));
-    assert(rgb2hsv(vec3(1.0f, 1.0f, 1.0f)) == vec3(0.0f, 0.0f, 1.0f));
+    assert(rgb2hsv(shared vec3(0.0f, 0.0f, 0.0f)) == shared vec3(0.0f, 0.0f, 0.0f));
+    assert(rgb2hsv(shared vec3(1.0f, 1.0f, 1.0f)) == shared vec3(0.0f, 0.0f, 1.0f));
 
-    vec3 hsv = rgb2hsv(vec3(100.0f/255.0f, 100.0f/255.0f, 100.0f/255.0f));    
+    shared vec3 hsv = rgb2hsv(shared vec3(100.0f/255.0f, 100.0f/255.0f, 100.0f/255.0f));    
     assert(hsv.x == 0.0f && hsv.y == 0.0f && almost_equal(hsv.z, 0.392157, 0.000001));
     
-    assert(rgb2hsv(vec3(0.0f, 0.0f, 1.0f)) == vec3(240.0f, 1.0f, 1.0f));
+    assert(rgb2hsv(shared vec3(0.0f, 0.0f, 1.0f)) == shared vec3(240.0f, 1.0f, 1.0f));
 }
 
 /// Converts a 3 dimensional color-vector from the HSV to the RGB colorspace.
@@ -96,11 +96,11 @@ unittest {
 }
 
 unittest {
-    assert(hsv2rgb(vec3(0.0f, 0.0f, 0.0f)) == vec3(0.0f, 0.0f, 0.0f));
-    assert(hsv2rgb(vec3(0.0f, 0.0f, 1.0f)) == vec3(1.0f, 1.0f, 1.0f));
+    assert(hsv2rgb(shared vec3(0.0f, 0.0f, 0.0f)) == shared vec3(0.0f, 0.0f, 0.0f));
+    assert(hsv2rgb(shared vec3(0.0f, 0.0f, 1.0f)) == shared vec3(1.0f, 1.0f, 1.0f));
 
-    vec3 rgb = hsv2rgb(vec3(0.0f, 0.0f, 0.392157f));
-    assert(rgb == vec3(0.392157f, 0.392157f, 0.392157f));
+    shared vec3 rgb = hsv2rgb(shared vec3(0.0f, 0.0f, 0.392157f));
+    assert(rgb == shared vec3(0.392157f, 0.392157f, 0.392157f));
 
-    assert(hsv2rgb(vec3(300.0f, 1.0f, 1.0f)) == vec3(1.0f, 0.0f, 1.0f));
+    assert(hsv2rgb(shared vec3(300.0f, 1.0f, 1.0f)) == shared vec3(1.0f, 0.0f, 1.0f));
 }

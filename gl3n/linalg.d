@@ -202,12 +202,12 @@ shared struct Vector(type, int dimension_) {
     }
 
     unittest {
-        vec3 vec_clear;
+        shared vec3 vec_clear;
         assert(!vec_clear.isFinite);
         vec_clear.clear(1.0f);
         assert(vec_clear.isFinite);
         assert(vec_clear.vector == [1.0f, 1.0f, 1.0f]);
-        assert(vec_clear.vector == vec3(1.0f).vector);
+        assert(vec_clear.vector == (shared vec3(1.0f)).vector);
         vec_clear.clear(float.infinity);
         assert(!vec_clear.isFinite);
         vec_clear.clear(float.nan);
@@ -215,52 +215,52 @@ shared struct Vector(type, int dimension_) {
         vec_clear.clear(1.0f);
         assert(vec_clear.isFinite);
         
-        vec4 b = vec4(1.0f, vec_clear);
+        shared vec4 b = shared vec4(1.0f, vec_clear);
         assert(b.isFinite);
         assert(b.vector == [1.0f, 1.0f, 1.0f, 1.0f]);
-        assert(b.vector == vec4(1.0f).vector);
+        assert(b.vector == (shared vec4(1.0f)).vector);
 
-        vec2 v2_1 = vec2(vec2(0.0f, 1.0f));
+        shared vec2 v2_1 = shared vec2(shared vec2(0.0f, 1.0f));
         assert(v2_1.vector == [0.0f, 1.0f]);
         
-        vec2 v2_2 = vec2(1.0f, 1.0f);
+        shared vec2 v2_2 = shared vec2(1.0f, 1.0f);
         assert(v2_2.vector == [1.0f, 1.0f]);
         
-        vec3 v3 = vec3(v2_1, 2.0f);
+        shared vec3 v3 = shared vec3(v2_1, 2.0f);
         assert(v3.vector == [0.0f, 1.0f, 2.0f]);
         
-        vec4 v4_1 = vec4(1.0f, vec2(2.0f, 3.0f), 4.0f);
+        shared vec4 v4_1 = shared vec4(1.0f, shared vec2(2.0f, 3.0f), 4.0f);
         assert(v4_1.vector == [1.0f, 2.0f, 3.0f, 4.0f]);
-        assert(vec3(v4_1).vector == [1.0f, 2.0f, 3.0f]);
-        assert(vec2(vec3(v4_1)).vector == [1.0f, 2.0f]);
-        assert(vec2(vec3(v4_1)).vector == vec2(v4_1).vector);
-        assert(v4_1.vector == vec4([1.0f, 2.0f, 3.0f, 4.0f]).vector);
+        assert((shared vec3(v4_1)).vector == [1.0f, 2.0f, 3.0f]);
+        assert((shared vec2(shared vec3(v4_1))).vector == [1.0f, 2.0f]);
+        assert((shared vec2(shared vec3(v4_1))).vector == (shared vec2(v4_1)).vector);
+        assert(v4_1.vector == (shared vec4([1.0f, 2.0f, 3.0f, 4.0f])).vector);
         
-        vec4 v4_2 = vec4(vec2(1.0f, 2.0f), vec2(3.0f, 4.0f));
+        shared vec4 v4_2 = shared vec4(shared vec2(1.0f, 2.0f), shared vec2(3.0f, 4.0f));
         assert(v4_2.vector == [1.0f, 2.0f, 3.0f, 4.0f]);
-        assert(vec3(v4_2).vector == [1.0f, 2.0f, 3.0f]);
-        assert(vec2(vec3(v4_2)).vector == [1.0f, 2.0f]);
-        assert(vec2(vec3(v4_2)).vector == vec2(v4_2).vector);
-        assert(v4_2.vector == vec4([1.0f, 2.0f, 3.0f, 4.0f]).vector);
+        assert((shared vec3(v4_2)).vector == [1.0f, 2.0f, 3.0f]);
+        assert((shared vec2(shared vec3(v4_2))).vector == [1.0f, 2.0f]);
+        assert((shared vec2(shared vec3(v4_2))).vector == (shared vec2(v4_2)).vector);
+        assert(v4_2.vector == (shared vec4([1.0f, 2.0f, 3.0f, 4.0f])).vector);
         
         float[2] f2 = [1.0f, 2.0f];
         float[3] f3 = [1.0f, 2.0f, 3.0f];
         float[4] f4 = [1.0f, 2.0f, 3.0f, 4.0f];
-        assert(vec2(1.0f, 2.0f).vector == vec2(f2).vector);
-        assert(vec3(1.0f, 2.0f, 3.0f).vector == vec3(f3).vector);
-        assert(vec3(1.0f, 2.0f, 3.0f).vector == vec3(f2, 3.0f).vector);
-        assert(vec4(1.0f, 2.0f, 3.0f, 4.0f).vector == vec4(f4).vector);
-        assert(vec4(1.0f, 2.0f, 3.0f, 4.0f).vector == vec4(f3, 4.0f).vector);
-        assert(vec4(1.0f, 2.0f, 3.0f, 4.0f).vector == vec4(f2, 3.0f, 4.0f).vector);
+        assert((shared vec2(1.0f, 2.0f)).vector == (shared vec2(f2)).vector);
+        assert((shared vec3(1.0f, 2.0f, 3.0f)).vector == (shared vec3(f3)).vector);
+        assert((shared vec3(1.0f, 2.0f, 3.0f)).vector == (shared vec3(f2, 3.0f)).vector);
+        assert((shared vec4(1.0f, 2.0f, 3.0f, 4.0f)).vector == (shared vec4(f4)).vector);
+        assert((shared vec4(1.0f, 2.0f, 3.0f, 4.0f)).vector == (shared vec4(f3, 4.0f)).vector);
+        assert((shared vec4(1.0f, 2.0f, 3.0f, 4.0f)).vector == (shared vec4(f2, 3.0f, 4.0f)).vector);
         // useful for: "vec4 v4 = […]" or "vec4 v4 = other_vector.rgba"
 
-        assert(vec3(vec3i(1, 2, 3)) == vec3(1.0, 2.0, 3.0));
-        assert(vec3d(vec3(1.0, 2.0, 3.0)) == vec3d(1.0, 2.0, 3.0));
+        assert(shared vec3(shared vec3i(1, 2, 3)) == shared vec3(1.0, 2.0, 3.0));
+        assert(shared vec3d(shared vec3(1.0, 2.0, 3.0)) == shared vec3d(1.0, 2.0, 3.0));
 
-        static assert(!__traits(compiles, vec3(0.0f, 0.0f)));
-        static assert(!__traits(compiles, vec4(0.0f, 0.0f, 0.0f)));
-        static assert(!__traits(compiles, vec4(0.0f, vec2(0.0f, 0.0f))));
-        static assert(!__traits(compiles, vec4(vec3(0.0f, 0.0f, 0.0f))));
+        static assert(!__traits(compiles, shared vec3(0.0f, 0.0f)));
+        static assert(!__traits(compiles, shared vec3(0.0f, 0.0f, 0.0f)));
+        static assert(!__traits(compiles, shared vec3(0.0f, shared vec2(0.0f, 0.0f))));
+        static assert(!__traits(compiles, shared vec3(shared vec3(0.0f, 0.0f, 0.0f))));
     }
 
     template coord_to_index(char c) {   
@@ -573,7 +573,7 @@ shared struct Vector(type, int dimension_) {
         assert(almost_equal(v4.normalized, vec4(1.0f/sqrt(84.0f), 3.0f/sqrt(84.0f), 5.0f/sqrt(84.0f), 7.0f/sqrt(84.0f))));
     }
        
-    const int opCmp(ref const shared Vector vec) const {
+    const int opCmp(ref shared const Vector vec) const {
         foreach(i, a; vector) {
             if(a < vec.vector[i]) {
                 return -1;
@@ -655,31 +655,31 @@ shared struct Vector(type, int dimension_) {
 }
 
 /// Calculates the cross product of two 3-dimensional vectors.
-@safe pure nothrow T cross(T)(const T veca, const T vecb) if(is_vector!T && (T.dimension == 3)) {
+@safe pure nothrow T cross(T)(const shared T veca, const shared T vecb) if(is_vector!T && (T.dimension == 3)) {
    return T(veca.y * vecb.z - vecb.y * veca.z,
             veca.z * vecb.x - vecb.z * veca.x,
             veca.x * vecb.y - vecb.x * veca.y);
 }
 
 /// Calculates the distance between two vectors.
-@safe pure nothrow T.vt distance(T)(const T veca, const T vecb) if(is_vector!T) {
+@safe pure nothrow T.vt distance(T)(const shared T veca, const shared T vecb) if(is_vector!T) {
     return (veca - vecb).length;
 }
 
 unittest {
     // dot is already tested in Vector.opBinary, so no need for testing with more vectors
-    vec3 v1 = vec3(1.0f, 2.0f, -3.0f);
-    vec3 v2 = vec3(1.0f, 3.0f, 2.0f);
+    shared vec3 v1 = shared vec3(1.0f, 2.0f, -3.0f);
+    shared vec3 v2 = shared vec3(1.0f, 3.0f, 2.0f);
     
     assert(dot(v1, v2) == 1.0f);
     assert(dot(v1, v2) == (v1 * v2));
     assert(dot(v1, v2) == dot(v2, v1));
     assert((v1 * v2) == (v1 * v2));
     
-    assert(cross(v1, v2).vector == [13.0f, -5.0f, 1.0f]);
-    assert(cross(v2, v1).vector == [-13.0f, 5.0f, -1.0f]);
+    assert(cross(v1, v2).vector == cast(shared)[13.0f, -5.0f, 1.0f]);
+    assert(cross(v2, v1).vector == cast(shared)[-13.0f, 5.0f, -1.0f]);
     
-    assert(distance(vec2(0.0f, 0.0f), vec2(0.0f, 10.0f)) == 10.0);        
+    assert(distance(shared vec2(0.0f, 0.0f), shared vec2(0.0f, 10.0f)) == 10.0);        
 }
  
 /// Pre-defined vector types, the number represents the dimension and the last letter the type (none = float, d = double, i = int).
