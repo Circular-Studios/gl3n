@@ -1,4 +1,4 @@
-Gl3n Shared
+Gl3n Shared [![Build Status](https://travis-ci.org/Circular-Studios/gl3n-shared.png?branch=master)](https://travis-ci.org/Circular-Studios/gl3n-shared)
 ====
 
 gl3n-shared provides all the math you need to work with OpenGL. All structs are marked as shared, and you should only use them as such! Currently gl3n supports:
