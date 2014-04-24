@@ -1810,7 +1810,7 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         m2 *= 2;
         assert(cast(float[2][2])m2.matrix == [[2.0f, 4.0f], [6.0f, 8.0f]]);
         assert(cast(float[2])(m2*v2).vector == [12.0f, 28.0f]);
-        assert((v2*m2).vector == [16.0f, 24.0f]);
+        assert(cast(float[2])(v2*m2).vector == [16.0f, 24.0f]);
         assert(cast(float[2][2])(m2*m2).matrix == [[28.0f, 40.0f], [60.0f, 88.0f]]);
         assert(cast(float[2][2])(m2-m2).matrix == [[0.0f, 0.0f], [0.0f, 0.0f]]);
         assert(cast(float[2][2])(m2+m2).matrix == [[4.0f, 8.0f], [12.0f, 16.0f]]);
@@ -1826,7 +1826,7 @@ shared struct Matrix(type, int rows_, int cols_) if((rows_ > 0) && (cols_ > 0)) 
         m3 *= 2;
         assert(cast(float[3][3])m3.matrix == [[2.0f, 4.0f, 6.0f], [8.0f, 10.0f, 12.0f], [14.0f, 16.0f, 18.0f]]);
         assert(cast(float[3])(m3*v3).vector == [24.0f, 60.0f, 96.0f]);
-        assert((v3*m3).vector == [48.0f, 60.0f, 72.0f]);
+        assert(cast(float[3])(v3*m3).vector == [48.0f, 60.0f, 72.0f]);
         assert(cast(float[3][3])(m3*m3).matrix == [[120.0f, 144.0f, 168.0f], [264.0f, 324.0f, 384.0f], [408.0f, 504.0f, 600.0f]]);
         assert(cast(float[3][3])(m3-m3).matrix == [[0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 0.0f]]);
         assert(cast(float[3][3])(m3+m3).matrix == [[4.0f, 8.0f, 12.0f], [16.0f, 20.0f, 24.0f], [28.0f, 32.0f, 36.0f]]);
@@ -2117,9 +2117,9 @@ shared struct Quaternion(type) {
         
         assert(cast(float[3][3])q1.to_matrix!(3, 3).matrix == [[-25.0f, -20.0f, 22.0f], [28.0f, -19.0f, 4.0f], [-10.0f, 20.0f, -9.0f]]);
         assert(cast(float[4][4])q1.to_matrix!(4, 4).matrix == [[-25.0f, -20.0f, 22.0f, 0.0f],
-                                              [28.0f, -19.0f, 4.0f, 0.0f],
-                                              [-10.0f, 20.0f, -9.0f, 0.0f],
-                                              [0.0f, 0.0f, 0.0f, 1.0f]]);
+                                                               [28.0f, -19.0f, 4.0f, 0.0f],
+                                                               [-10.0f, 20.0f, -9.0f, 0.0f],
+                                                               [0.0f, 0.0f, 0.0f, 1.0f]]);
         assert(quat.identity.to_matrix!(3, 3).matrix == Matrix!(qt, 3, 3).identity.matrix);
         assert(q1.quaternion == quat.from_matrix(q1.to_matrix!(3, 3)).quaternion);
 
