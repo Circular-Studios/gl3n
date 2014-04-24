@@ -516,7 +516,7 @@ shared struct Vector(type, int dimension_) {
 
         shared mat2 m2 = shared mat2(1.0f, 2.0f, 3.0f, 4.0f);
         shared vec2 v2_2 = shared vec2(2.0f, 2.0f);
-        assert((cast(float[2])(v2_2*m2).vector == [8.0f, 12.0f]);
+        assert(cast(float[2])(v2_2*m2).vector == [8.0f, 12.0f]);
 
         shared mat3 m3 = shared mat3(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
         shared vec3 v3_2 = shared vec3(2.0f, 2.0f, 2.0f);
