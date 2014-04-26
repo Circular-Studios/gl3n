@@ -22,13 +22,13 @@ shared struct AABBT(type) {
     /// Params:
     /// min = minimum of the AABB
     /// max = maximum of the AABB
-    this(vec3 min, vec3 max) {
+    this(shared vec3 min, shared vec3 max) {
         this.min = min;
         this.max = max;
     }
 
     /// Constructs the AABB around N points (all points will be part of the AABB).
-    static AABBT from_points(vec3[] points) {
+    static AABBT from_points(shared vec3[] points) {
         shared AABBT res;
 
         if(points.length == 0) {
@@ -59,7 +59,7 @@ shared struct AABBT(type) {
     }
 
     /// Expands the AABB by another AABB. 
-    void expand(AABBT b) {
+    void expand(shared AABBT b) {
         if (min.x > b.min.x) min.x = b.min.x;
         if (min.y > b.min.y) min.y = b.min.y;
         if (min.z > b.min.z) min.z = b.min.z;
